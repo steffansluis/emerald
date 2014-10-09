@@ -1,14 +1,12 @@
-sega.factory = ( exports ) ->
-    exports._ = sega
+Emerald.factory = ( exports ) ->
+    exports._                   = Emerald
 
-# Exports sega for CommonJS, AMD and the browser.
+# Exports Emerald for CommonJS, AMD and the browser.
 if typeof exports == 'object'
-  sega.factory(exports)
+  Emerald.factory(exports)
 else if typeof define == 'function' && define.amd
   define ['exports'], (exports) ->
-    sega.factory(@sega = exports)
+    Emerald.factory(@Emerald = exports)
     return exports
 else
-  sega.factory(@sega = {})
-
-
+  Emerald.factory(@Emerald = {})
