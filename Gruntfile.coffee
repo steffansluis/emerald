@@ -41,7 +41,7 @@ module.exports = ( grunt ) ->
       build:
         src: ['build/**/*.js']
         options:
-          specs: specs #'.grunt/emerald/spec_compiled/**/*.js'
+          specs: specs
 
     clean:
       build: ['build']
