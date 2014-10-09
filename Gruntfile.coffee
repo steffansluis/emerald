@@ -2,11 +2,14 @@ module.exports = ( grunt ) ->
   srcs = [
     'src/emerald.coffee'
 
+    'src/abstract_generator.coffee'
+    'src/function_generator.coffee'
+
     'src/export.coffee'
   ]
 
   specs = [
-    # '.grunt/emerald/spec_compiled/emerald.js'
+    '.grunt/emerald/spec_compiled/emerald.js'
 
     # '.grunt/emerald/spec_compiled/export.js'
   ]
@@ -41,6 +44,10 @@ module.exports = ( grunt ) ->
       build:
         src: ['build/**/*.js']
         options:
+          vendor: [
+            "bower_components/sonic/dist/sonic.js",
+          ]
+          keepRunner: true
           specs: specs
 
     clean:
@@ -51,7 +58,7 @@ module.exports = ( grunt ) ->
     watch:
       all:
         files: ['src/**/*.coffee']
-        tasks: ['dist']
+        tasks: ['coffee:dist', 'coffee:spec']
 
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-watch'

@@ -1,0 +1,3 @@
+class FunctionGenerator extends AbstractGenerator
+
+
