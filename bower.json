@@ -1,6 +1,6 @@
 {
-  "name": "sega",
-  "description": "Standard Extensible Grunt Application",
+  "name": "emerald",
+  "description": "Making shiny mathemagics using Sonic.js",
   "version": "0.0.1",
 
   "authors": [
@@ -16,11 +16,19 @@
 
   "homepage": "https://github.com/steffansluis/sega",
   "keywords": [
-    "standard",
-    "extensible",
-    "grunt",
-    "application"
+    "javascript",
+    "coffeescript",
+    "math",
+    "sum",
+    "difference",
+    "integral",
+    "differential"
   ],
 
-  "main": "dist/sega.js"
+  "main": "dist/emerald.js",
+  "license": "MIT",
+  "homepage": "https://github.com/steffansluis/emerald",
+  "dependencies": {
+    "sonic": "joostverdoorn/sonic#95fdb5bba73f021b910e10c5e3a611a7f2093524"
+  }
 }
