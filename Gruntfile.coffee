@@ -1,13 +1,14 @@
 module.exports = ( grunt ) ->
   srcs = [
-    'src/sega.coffee'
+    'src/emerald.coffee'
+
     'src/export.coffee'
   ]
 
-
   specs = [
-    '.grunt/sega/spec_compiled/sega.js'
-    '.grunt/sega/spec_compiled/export.js'
+    # '.grunt/emerald/spec_compiled/emerald.js'
+
+    # '.grunt/emerald/spec_compiled/export.js'
   ]
 
   grunt.initConfig
@@ -18,21 +19,21 @@ module.exports = ( grunt ) ->
         options:
           join: true
         files:
-          'dist/sega.js': srcs
+          'dist/emerald.js': srcs
 
       build:
         options:
           join: true
           sourceMap: true
         files:
-          'build/sega.js': srcs
+          'build/emerald.js': srcs
 
       spec:
         files: [
           expand: true
           cwd: 'spec'
           src: ['**/*.coffee']
-          dest: '.grunt/sega/spec_compiled'
+          dest: '.grunt/emerald/spec_compiled'
           ext: '.js'
         ]
 
@@ -44,7 +45,7 @@ module.exports = ( grunt ) ->
 
     clean:
       build: ['build']
-      spec:  ['.grunt/sega/spec_compiled']
+      spec:  ['.grunt/emerald/spec_compiled']
       grunt: ['.grunt']
 
     watch:
