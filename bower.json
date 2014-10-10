@@ -29,6 +29,6 @@
   "license": "MIT",
   "homepage": "https://github.com/steffansluis/emerald",
   "dependencies": {
-    "sonic": "joostverdoorn/sonic#95fdb5bba73f021b910e10c5e3a611a7f2093524"
+    "sonic": "joostverdoorn/sonic#6b3ca79d1fb57dd0397c5845a16d585d522d8185"
   }
 }

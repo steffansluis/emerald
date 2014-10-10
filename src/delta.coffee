@@ -1,10 +1,10 @@
 class Delta extends Emerald.Sonic.Entry
 
-  constructor: ( value = 1 ) ->
-    super value
+  constructor: ( value = 1 , options = {}) ->
+    super 1, options
 
   next: ( ) ->
-    return @
+    return @_next ||= new Delta()
 
   previous: ( ) ->
-    return @
+    return @_previous ||= new Delta()

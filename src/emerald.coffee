@@ -3,11 +3,14 @@ Emerald =
   Sonic: Sonic
 
   domains :
-    N: () -> new Sonic.SimpleList([1..100])
+    N: () -> new Domain (x) -> x + 1
 
-  mapFN:
-    constant: (x) -> x
-    square: (x) -> x * x
+  f: ( fn ) ->
+    return fn if fn instanceof AbstractFn
 
-  f: ( fn, domains... ) ->
-    return new Fn fn, domains
+    switch typeof fn
+      when "number"
+        return new Constant fn
+      when "function"
+        return new AbstractFn fn
+

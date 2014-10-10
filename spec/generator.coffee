@@ -8,4 +8,4 @@ describe "Generator", ->
     n = 10
     for i in [0...n]
       iterator.moveNext()
-      console.log(iterator.current())
+      # console.log(iterator.current())
