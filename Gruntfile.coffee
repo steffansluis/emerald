@@ -2,6 +2,10 @@ module.exports = ( grunt ) ->
   srcs = [
     'src/emerald.coffee'
 
+    'src/fn.coffee'
+
+    'src/delta.coffee'
+    'src/generator.coffee'
     'src/abstract_generator.coffee'
     'src/function_generator.coffee'
 
@@ -10,6 +14,8 @@ module.exports = ( grunt ) ->
 
   specs = [
     '.grunt/emerald/spec_compiled/emerald.js'
+    '.grunt/emerald/spec_compiled/generator.js'
+    '.grunt/emerald/spec_compiled/fn.js'
 
     # '.grunt/emerald/spec_compiled/export.js'
   ]

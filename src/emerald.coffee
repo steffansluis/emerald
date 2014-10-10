@@ -5,5 +5,9 @@ Emerald =
   domains :
     N: () -> new Sonic.SimpleList([1..100])
 
-  f: ( fn, options = {} ) ->
-    return new FunctionGenerator fn, options
+  mapFN:
+    constant: (x) -> x
+    square: (x) -> x * x
+
+  f: ( fn, domains... ) ->
+    return new Fn fn, domains
