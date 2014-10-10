@@ -68,6 +68,18 @@ module.exports = ( grunt ) ->
           ]
           keepRunner: true
           specs: specs
+          template: require('grunt-template-jasmine-istanbul')
+          templateOptions:
+            coverage: 'lcov.info'
+            report:
+              type: 'lcovonly'
+              options:
+                dir: 'statistics/coverage/lcov'
+            thresholds:
+              lines: 60
+              statements: 60
+              branches: 60
+              functions: 60
 
     clean:
       build: ['build']
