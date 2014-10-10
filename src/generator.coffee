@@ -6,3 +6,4 @@ class Generator extends Emerald.Sonic.AbstractList
     super options
     @_insert(1, ater: @headEntry, before: @tailEntry)
 
+

@@ -2,20 +2,33 @@ module.exports = ( grunt ) ->
   srcs = [
     'src/emerald.coffee'
 
-    'src/fn.coffee'
+    'src/abstract_fn.coffee'
+    'src/constant.coffee'
+    'src/power_fn.coffee'
+    'src/product_fn.coffee'
+    'src/sum_fn.coffee'
 
     'src/delta.coffee'
     'src/generator.coffee'
-    'src/abstract_generator.coffee'
-    'src/function_generator.coffee'
+    'src/aggregator.coffee'
+
+    'src/domain.coffee'
 
     'src/export.coffee'
   ]
 
   specs = [
     '.grunt/emerald/spec_compiled/emerald.js'
+
+    '.grunt/emerald/spec_compiled/abstract_fn.js'
+    '.grunt/emerald/spec_compiled/constant.js'
+    '.grunt/emerald/spec_compiled/power_fn.js'
+    '.grunt/emerald/spec_compiled/product_fn.js'
+    '.grunt/emerald/spec_compiled/sum_fn.js'
+
     '.grunt/emerald/spec_compiled/generator.js'
-    '.grunt/emerald/spec_compiled/fn.js'
+
+    '.grunt/emerald/spec_compiled/domain.js'
 
     # '.grunt/emerald/spec_compiled/export.js'
   ]
@@ -74,7 +87,7 @@ module.exports = ( grunt ) ->
   grunt.registerTask 'default', ['watch']
   grunt.registerTask 'build',   ['coffee:build']
   grunt.registerTask 'dist',    ['coffee:dist']
-  grunt.registerTask 'spec',    ['clean:spec', 'coffee:build', 'coffee:spec', 'jasmine:build', 'clean:spec']
+  grunt.registerTask 'spec',    ['clean:spec', 'coffee:build', 'coffee:spec', 'jasmine:build']
 
 
 
