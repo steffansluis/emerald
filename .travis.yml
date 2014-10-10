@@ -6,4 +6,4 @@ before_script:
   - npm install -g bower
   - bower install
 after_script:
-  - cat .statistics/coverage/lcov/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - cat statistics/coverage/lcov/lcov.info | ./node_modules/coveralls/bin/coveralls.js
