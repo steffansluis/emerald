@@ -70,7 +70,7 @@ module.exports = ( grunt ) ->
           specs: specs
           template: require('grunt-template-jasmine-istanbul')
           templateOptions:
-            coverage: 'lcov.info'
+            coverage: 'statistics/coverage/coverage.json'
             report:
               type: 'lcovonly'
               options:
