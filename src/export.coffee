@@ -4,8 +4,11 @@ Emerald.factory = ( exports ) ->
 
   exports.f                   = Emerald.f
 
+  exports.Fn                  = Fn
+
+  exports.Delta               = Delta
+  exports.Generator           = Generator
   exports.AbstractGenerator   = AbstractGenerator
-  exports.FunctionGenerator   = FunctionGenerator
 
   exports.domains             = Emerald.domains
   # exports.configure = ( options={} ) ->
