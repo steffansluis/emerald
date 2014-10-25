@@ -1,0 +1,41 @@
+{
+  "name": "sega",
+  "description": "Standard Extensible Grunt Application",
+  "version": "0.0.1",
+
+  "authors": [
+    "Steffan Sluis <steffansluis@gmail.com>",
+    "Joost Verdoorn <jpverdoorn@gmail.com>"
+  ],
+
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/steffansluis/sega.git"
+  },
+
+  "homepage": "https://github.com/steffansluis/sega",
+  "keywords": [
+    "standard",
+    "extensible",
+    "grunt",
+    "application"
+  ],
+
+  "main": "dist/sega.js",
+  "scripts": {
+    "test": "grunt spec"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-concat": "~0.5.0",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-jasmine": "~0.6.5",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-template-jasmine-istanbul": "~0.3.0",
+    "grunt-plato": "~1.3.0",
+    "coveralls": "~2.11.1"
+  }
+}

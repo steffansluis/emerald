@@ -1,0 +1,26 @@
+{
+  "name": "sega",
+  "description": "Standard Extensible Grunt Application",
+  "version": "0.0.1",
+
+  "authors": [
+    "Steffan Sluis <steffansluis@gmail.com>",
+    "Joost Verdoorn <jpverdoorn@gmail.com>"
+  ],
+
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/steffansluis/sega.git"
+  },
+
+  "homepage": "https://github.com/steffansluis/sega",
+  "keywords": [
+    "standard",
+    "extensible",
+    "grunt",
+    "application"
+  ],
+
+  "main": "dist/sega.js"
+}
