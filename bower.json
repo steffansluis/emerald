@@ -5,7 +5,7 @@
     "Steffan Sluis <steffansluis@gmail.com>"
   ],
   "contributors": [
-    "Joost Verdoorn <jpverdoorn@gmail.com"
+    "Joost Verdoorn <jpverdoorn@gmail.com>"
   ],
   "description": "Making shiny mathemagics using Sonic.js",
   "main": "dist/emerald.js",
@@ -29,6 +29,6 @@
   "license": "MIT",
   "homepage": "https://github.com/steffansluis/emerald",
   "dependencies": {
-    "sonic": "joostverdoorn/sonic#entry-rewrite"
+    "sonic": "joostverdoorn/sonic#develop"
   }
 }
