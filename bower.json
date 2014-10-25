@@ -1,20 +1,14 @@
 {
   "name": "emerald",
-  "description": "Making shiny mathemagics using Sonic.js",
   "version": "0.0.1",
-
   "authors": [
-    "Steffan Sluis <steffansluis@gmail.com>",
+    "Steffan Sluis <steffansluis@gmail.com>"
+  ],
+  "contributors": [
     "Joost Verdoorn <jpverdoorn@gmail.com>"
   ],
-
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/steffansluis/sega.git"
-  },
-
-  "homepage": "https://github.com/steffansluis/emerald",
+  "description": "Making shiny mathemagics using Sonic.js",
+  "main": "dist/emerald.js",
   "keywords": [
     "javascript",
     "coffeescript",
@@ -32,11 +26,9 @@
     "integral",
     "differential"
   ],
-
-  "main": "dist/emerald.js",
   "license": "MIT",
   "homepage": "https://github.com/steffansluis/emerald",
   "dependencies": {
-    "sonic": "joostverdoorn/sonic#entry-rewrite"
+    "sonic": "joostverdoorn/sonic#develop"
   }
 }
