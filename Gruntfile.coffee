@@ -2,11 +2,23 @@ module.exports = ( grunt ) ->
   srcs = [
     'src/emerald.coffee'
 
+    'src/abstract_fn.coffee'
+    'src/constant.coffee'
+    'src/power_fn.coffee'
+    'src/product_fn.coffee'
+    'src/sum_fn.coffee'
+
     'src/export.coffee'
   ]
 
   specs = [
-    # '.grunt/emerald/spec_compiled/emerald.js'
+    '.grunt/emerald/spec_compiled/emerald.js'
+
+    '.grunt/emerald/spec_compiled/abstract_fn.js'
+    '.grunt/emerald/spec_compiled/constant.js'
+    '.grunt/emerald/spec_compiled/power_fn.js'
+    '.grunt/emerald/spec_compiled/product_fn.js'
+    '.grunt/emerald/spec_compiled/sum_fn.js'
 
     # '.grunt/emerald/spec_compiled/export.js'
   ]
@@ -41,7 +53,23 @@ module.exports = ( grunt ) ->
       build:
         src: ['build/**/*.js']
         options:
+          vendor: [
+            "bower_components/sonic/dist/sonic.js",
+          ]
+          keepRunner: true
           specs: specs
+          template: require('grunt-template-jasmine-istanbul')
+          templateOptions:
+            coverage: 'statistics/coverage/coverage.json'
+            report:
+              type: 'lcovonly'
+              options:
+                dir: 'statistics/coverage/lcov'
+            thresholds:
+              lines: 60
+              statements: 60
+              branches: 60
+              functions: 60
 
     clean:
       build: ['build']
@@ -51,7 +79,7 @@ module.exports = ( grunt ) ->
     watch:
       all:
         files: ['src/**/*.coffee']
-        tasks: ['dist']
+        tasks: ['coffee:dist', 'coffee:spec']
 
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-watch'
@@ -61,7 +89,7 @@ module.exports = ( grunt ) ->
   grunt.registerTask 'default', ['watch']
   grunt.registerTask 'build',   ['coffee:build']
   grunt.registerTask 'dist',    ['coffee:dist']
-  grunt.registerTask 'spec',    ['clean:spec', 'coffee:build', 'coffee:spec', 'jasmine:build', 'clean:spec']
+  grunt.registerTask 'spec',    ['clean:spec', 'coffee:build', 'coffee:spec', 'jasmine:build']
 
 
 
