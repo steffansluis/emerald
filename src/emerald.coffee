@@ -2,9 +2,6 @@ Emerald =
 
   Sonic: Sonic
 
-  domains :
-    N: () -> new Domain (x) -> x + 1
-
   f: ( fn ) ->
     return fn if fn instanceof AbstractFn
 

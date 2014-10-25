@@ -1,5 +1,5 @@
 (function() {
-  var AbstractFn, Aggregator, Constant, Delta, Domain, Emerald, Generator, PowerFn, ProductFn, SumFn,
+  var AbstractFn, Constant, Emerald, PowerFn, ProductFn, SumFn,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -29,7 +29,6 @@
     __extends(AbstractFn, _super);
 
     function AbstractFn(options) {
-      var key, value, _i, _j, _len, _len1, _ref, _ref1;
       if (options == null) {
         options = {};
       }
@@ -43,18 +42,6 @@
         } else {
           this.inner = options.fn || options.value;
         }
-      }
-      this.from = {};
-      _ref = options.from || Emerald.domains.N();
-      for (value = _i = 0, _len = _ref.length; _i < _len; value = ++_i) {
-        key = _ref[value];
-        this.from[key] = value.createHandle();
-      }
-      this.to = {};
-      _ref1 = options.to || Emerald.domains.N();
-      for (value = _j = 0, _len1 = _ref1.length; _j < _len1; value = ++_j) {
-        key = _ref1[value];
-        this.to[key] = value.createHandle();
       }
     }
 
@@ -214,101 +201,6 @@
     return SumFn;
 
   })(AbstractFn);
-
-  Delta = (function(_super) {
-    __extends(Delta, _super);
-
-    function Delta(value, options) {
-      if (value == null) {
-        value = 1;
-      }
-      if (options == null) {
-        options = {};
-      }
-      Delta.__super__.constructor.call(this, 1, options);
-    }
-
-    Delta.prototype.next = function() {
-      return this._next || (this._next = new Delta());
-    };
-
-    Delta.prototype.previous = function() {
-      return this._previous || (this._previous = new Delta());
-    };
-
-    return Delta;
-
-  })(Emerald.Sonic.Entry);
-
-  Generator = (function(_super) {
-    __extends(Generator, _super);
-
-    Generator.prototype.Entry = Delta;
-
-    function Generator(options) {
-      if (options == null) {
-        options = {};
-      }
-      Generator.__super__.constructor.call(this, options);
-      this._insert(1, {
-        ater: this.headEntry,
-        before: this.tailEntry
-      });
-    }
-
-    return Generator;
-
-  })(Emerald.Sonic.AbstractList);
-
-  Aggregator = (function(_super) {
-    __extends(Aggregator, _super);
-
-    function Aggregator() {
-      return Aggregator.__super__.constructor.apply(this, arguments);
-    }
-
-    Aggregator.prototype.value = function() {
-      var first, previous;
-      if (this._value != null) {
-        return this._value;
-      }
-      console.log("source", this.source.value(), "in", this.id);
-      if (previous = this.previous()) {
-        first = this.list.headEntry.next();
-        if (this === first) {
-          console.log("first");
-          return this._value = this.list.mapFn(this.source.value());
-        } else {
-          return console.log("Other", previous === first);
-        }
-      }
-    };
-
-    return Aggregator;
-
-  })(Emerald.Sonic.MappedEntry);
-
-  Domain = (function(_super) {
-    __extends(Domain, _super);
-
-    Domain.prototype.Entry = Aggregator;
-
-    function Domain(options) {
-      if (options == null) {
-        options = {};
-      }
-      if (typeof options === "function") {
-        options = {
-          mapFn: options
-        };
-      }
-      this.generator = options.generator || new Generator();
-      Domain.__super__.constructor.call(this, this.generator, options);
-    }
-
-    return Domain;
-
-  })(Emerald.Sonic.MappedList);
 
   Emerald.factory = function(exports) {
     exports._ = Emerald;

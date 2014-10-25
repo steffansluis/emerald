@@ -8,12 +8,6 @@ module.exports = ( grunt ) ->
     'src/product_fn.coffee'
     'src/sum_fn.coffee'
 
-    'src/delta.coffee'
-    'src/generator.coffee'
-    'src/aggregator.coffee'
-
-    'src/domain.coffee'
-
     'src/export.coffee'
   ]
 
@@ -25,10 +19,6 @@ module.exports = ( grunt ) ->
     '.grunt/emerald/spec_compiled/power_fn.js'
     '.grunt/emerald/spec_compiled/product_fn.js'
     '.grunt/emerald/spec_compiled/sum_fn.js'
-
-    '.grunt/emerald/spec_compiled/generator.js'
-
-    '.grunt/emerald/spec_compiled/domain.js'
 
     # '.grunt/emerald/spec_compiled/export.js'
   ]

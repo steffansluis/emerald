@@ -10,13 +10,6 @@ Emerald.factory = ( exports ) ->
   exports.ProductFn           = ProductFn
   exports.SumFn               = SumFn
 
-  exports.Delta               = Delta
-  exports.Generator           = Generator
-  exports.Aggregator          = Aggregator
-
-  exports.Domain              = Domain
-
-  exports.domains             = Emerald.domains
   # exports.configure = ( options={} ) ->
   #   for property, value of options
   #     Emerald.config[property] = value
