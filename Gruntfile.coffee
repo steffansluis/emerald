@@ -15,6 +15,13 @@ module.exports = ( grunt ) ->
     'src/series.coffee'
     'src/geometric_series.coffee'
 
+    'src/event.coffee'
+    'src/random_variable.coffee'
+    'src/bernoulli.coffee'
+    'src/binomial.coffee'
+    'src/geometric.coffee'
+    'src/uniform.coffee'
+
     'src/export.coffee'
   ]
 
@@ -32,6 +39,13 @@ module.exports = ( grunt ) ->
     '.grunt/emerald/spec_compiled/sequence.js'
     '.grunt/emerald/spec_compiled/series.js'
     # '.grunt/emerald/spec_compiled/geometric_series.js'
+
+    # '.grunt/emerald/spec_compiled/event.js'
+    # '.grunt/emerald/spec_compiled/random_variable.js'
+    # '.grunt/emerald/spec_compiled/bernoulli.js'
+    # '.grunt/emerald/spec_compiled/binomial.js'
+    # '.grunt/emerald/spec_compiled/geometric.js'
+    # '.grunt/emerald/spec_compiled/uniform.js'
 
     # '.grunt/emerald/spec_compiled/export.js'
   ]
@@ -73,18 +87,18 @@ module.exports = ( grunt ) ->
           ]
           keepRunner: true
           specs: specs
-          template: require('grunt-template-jasmine-istanbul')
-          templateOptions:
-            coverage: 'statistics/coverage/coverage.json'
-            report:
-              type: 'lcovonly'
-              options:
-                dir: 'statistics/coverage/lcov'
-            thresholds:
-              lines: 60
-              statements: 60
-              branches: 60
-              functions: 60
+          # template: require('grunt-template-jasmine-istanbul')
+          # templateOptions:
+          #   coverage: 'statistics/coverage/coverage.json'
+          #   report:
+          #     type: 'lcovonly'
+          #     options:
+          #       dir: 'statistics/coverage/lcov'
+          #   thresholds:
+          #     lines: 60
+          #     statements: 60
+          #     branches: 60
+          #     functions: 60
 
     clean:
       build: ['build']

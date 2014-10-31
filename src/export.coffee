@@ -5,6 +5,7 @@ Emerald.factory = ( exports ) ->
 
   exports.domains             = Emerald.domains
 
+  # Algebra
   exports.AbstractFn          = AbstractFn
   exports.Constant            = Constant
   exports.PowerFn             = PowerFn
@@ -13,10 +14,21 @@ Emerald.factory = ( exports ) ->
   exports.SumFn               = SumFn
   exports.DifferenceFn        = DifferenceFn
 
+  # Calculus
   exports.SequenceEntry       = SequenceEntry
   exports.Sequence            = Sequence
   exports.Series              = Series
   exports.GeometricSeries     = GeometricSeries
+
+  # Statistics
+  exports.Event               = Event
+  exports.RandomVariable      = RandomVariable
+  exports.Bernoulli           = Bernoulli
+  exports.Binomial            = Binomial
+  exports.Geometric           = Geometric
+  exports.Uniform             = Uniform
+
+
 
   # exports.configure = ( options={} ) ->
   #   for property, value of options
