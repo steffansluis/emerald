@@ -10,5 +10,7 @@ Emerald = ( item ) ->
     when "function"
       return new AbstractFn item
 
+Emerald.domains =
+    N: new @Sonic.GeneratedList (list) -> list.toArray().length
 Emerald.Sonic = Sonic
 Emerald.Big = Big

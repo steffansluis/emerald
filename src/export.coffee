@@ -3,6 +3,8 @@ Emerald.factory = ( exports ) ->
   exports.Sonic               = Sonic
   exports.Big                 = Big
 
+  exports.domains             = Emerald.domains
+
   exports.AbstractFn          = AbstractFn
   exports.Constant            = Constant
   exports.PowerFn             = PowerFn
@@ -10,6 +12,11 @@ Emerald.factory = ( exports ) ->
   exports.RationalFn          = RationalFn
   exports.SumFn               = SumFn
   exports.DifferenceFn        = DifferenceFn
+
+  exports.SequenceEntry       = SequenceEntry
+  exports.Sequence            = Sequence
+  exports.Series              = Series
+  exports.GeometricSeries     = GeometricSeries
 
   # exports.configure = ( options={} ) ->
   #   for property, value of options

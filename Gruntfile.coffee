@@ -10,6 +10,11 @@ module.exports = ( grunt ) ->
     'src/sum_fn.coffee'
     'src/difference_fn.coffee'
 
+    'src/sequence_entry.coffee'
+    'src/sequence.coffee'
+    'src/series.coffee'
+    'src/geometric_series.coffee'
+
     'src/export.coffee'
   ]
 
@@ -24,6 +29,10 @@ module.exports = ( grunt ) ->
     '.grunt/emerald/spec_compiled/sum_fn.js'
     '.grunt/emerald/spec_compiled/difference_fn.js'
 
+    '.grunt/emerald/spec_compiled/sequence.js'
+    '.grunt/emerald/spec_compiled/series.js'
+    # '.grunt/emerald/spec_compiled/geometric_series.js'
+
     # '.grunt/emerald/spec_compiled/export.js'
   ]
 
@@ -34,6 +43,7 @@ module.exports = ( grunt ) ->
       dist:
         options:
           join: true
+          sourceMap: true
         files:
           'dist/emerald.js': srcs
 
@@ -84,7 +94,7 @@ module.exports = ( grunt ) ->
     watch:
       all:
         files: ['src/**/*.coffee']
-        tasks: ['coffee:dist', 'coffee:spec']
+        tasks: ['coffee:dist', 'coffee:spec', 'coffee:build']
 
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-watch'
