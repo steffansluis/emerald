@@ -9,7 +9,7 @@ class SumFn extends AbstractFn
     @right = options.right
 
   evaluate: (left, right) ->
-    @left.evaluate() + @right.evaluate()
+    @left.evaluate().plus @right.evaluate()
 
   toString: () ->
     left = @left.toString()

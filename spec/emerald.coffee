@@ -24,28 +24,28 @@ describe "Emerald", ->
 
   describe "power", ->
     beforeEach ->
-      @power = 8
+      @power = Emerald.f(8)
       @base = Emerald.f(2)
       @f = @base.power(@power)
 
     it "should return a PowerFn with the given power", ->
-      expect(@f).toEqual(new Emerald.PowerFn(exp: 8,fn: @base))
+      expect(@f).toEqual(new Emerald.PowerFn(exp: @power,fn: @base))
 
   describe "sum", ->
     beforeEach ->
       @base = Emerald.f(2)
-      @right = 8
+      @right = Emerald.f(8)
       @f = @base.sum(@right)
 
     it "should return a SumFn with the given left and right", ->
-      expect(@f).toEqual(new Emerald.SumFn(left: @base,right: 8))
+      expect(@f).toEqual(new Emerald.SumFn(left: @base,right: @right))
 
   describe "product", ->
     beforeEach ->
       @base = Emerald.f(2)
-      @right = 8
+      @right = Emerald.f(8)
       @f = @base.product(@right)
 
     it "should return a ProductFn with the given power", ->
-      expect(@f).toEqual(new Emerald.ProductFn(left: @base, right: 8))
+      expect(@f).toEqual(new Emerald.ProductFn(left: @base, right: @right))
 

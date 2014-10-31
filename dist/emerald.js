@@ -5,13 +5,7 @@
 
   Emerald = {
     Sonic: Sonic,
-    domains: {
-      N: function() {
-        return new Domain(function(x) {
-          return x + 1;
-        });
-      }
-    },
+    Big: Big,
     f: function(fn) {
       if (fn instanceof AbstractFn) {
         return fn;
@@ -48,7 +42,7 @@
     AbstractFn.prototype.power = function(exp) {
       var options;
       options = {
-        exp: exp,
+        exp: Emerald.f(exp),
         fn: this
       };
       return new PowerFn(options);
@@ -65,14 +59,14 @@
     AbstractFn.prototype.product = function(right) {
       return new ProductFn({
         left: this,
-        right: right
+        right: Emerald.f(right)
       });
     };
 
     AbstractFn.prototype.sum = function(right) {
       return new SumFn({
         left: this,
-        right: right
+        right: Emerald.f(right)
       });
     };
 
@@ -91,7 +85,7 @@
     function Constant(options) {
       if (typeof options === "number") {
         options = {
-          value: options
+          value: new Emerald.Big(options)
         };
       }
       Constant.__super__.constructor.call(this, options);
@@ -124,7 +118,9 @@
     }
 
     PowerFn.prototype.evaluate = function() {
-      return Math.pow(this.inner.evaluate(), this.exp);
+      var exp;
+      exp = parseFloat(this.exp.evaluate().toPrecision());
+      return this.inner.evaluate().pow(exp);
     };
 
     PowerFn.prototype.integrate = function() {
@@ -137,7 +133,7 @@
     PowerFn.prototype.toString = function() {
       var inner;
       inner = this.inner.toString();
-      return "(" + inner + ")^" + this.power;
+      return "(" + inner + ")^" + this.exp;
     };
 
     return PowerFn;
@@ -188,7 +184,7 @@
     }
 
     SumFn.prototype.evaluate = function(left, right) {
-      return this.left.evaluate() + this.right.evaluate();
+      return this.left.evaluate().plus(this.right.evaluate());
     };
 
     SumFn.prototype.toString = function() {
@@ -205,17 +201,13 @@
   Emerald.factory = function(exports) {
     exports._ = Emerald;
     exports.Sonic = Sonic;
+    exports.Big = Big;
     exports.f = Emerald.f;
     exports.AbstractFn = AbstractFn;
     exports.Constant = Constant;
     exports.PowerFn = PowerFn;
     exports.ProductFn = ProductFn;
-    exports.SumFn = SumFn;
-    exports.Delta = Delta;
-    exports.Generator = Generator;
-    exports.Aggregator = Aggregator;
-    exports.Domain = Domain;
-    return exports.domains = Emerald.domains;
+    return exports.SumFn = SumFn;
   };
 
   if (typeof exports === 'object') {

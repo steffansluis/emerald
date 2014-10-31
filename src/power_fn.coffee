@@ -8,7 +8,8 @@ class PowerFn extends AbstractFn
     @exp = options.exp
 
   evaluate: () ->
-    Math.pow(@inner.evaluate(), @exp)
+    exp = parseFloat @exp.evaluate().toPrecision()
+    @inner.evaluate().pow exp
 
   integrate:() ->
     primitive = @inner.intergrate().divide(@exp)
@@ -19,4 +20,4 @@ class PowerFn extends AbstractFn
 
   toString: () ->
     inner = @inner.toString()
-    "(#{inner})^#{@power}"
+    "(#{inner})^#{@exp}"

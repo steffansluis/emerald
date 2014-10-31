@@ -29,6 +29,7 @@
   "license": "MIT",
   "homepage": "https://github.com/steffansluis/emerald",
   "dependencies": {
-    "sonic": "joostverdoorn/sonic#develop"
+    "sonic": "joostverdoorn/sonic#develop",
+    "big.js": "MikeMcl/big.js#~2.5.1"
   }
 }

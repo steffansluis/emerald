@@ -10,7 +10,7 @@ class AbstractFn extends Emerald.Sonic.MappedList
 
   power: ( exp ) ->
     options =
-      exp: exp
+      exp: Emerald.f(exp)
       fn: @
 
     new PowerFn options
@@ -18,8 +18,8 @@ class AbstractFn extends Emerald.Sonic.MappedList
   square: () -> @power(2)
   cube: () -> @power(3)
 
-  product: (right) -> new ProductFn left: @, right: right
-  sum: (right) -> new SumFn left: @, right: right
+  product: (right) -> new ProductFn left: @, right: Emerald.f(right)
+  sum: (right) -> new SumFn left: @, right: Emerald.f(right)
 
   toString: () ->
     "#{@inner?.toString()}"

@@ -1,6 +1,7 @@
 Emerald.factory = ( exports ) ->
   exports._                   = Emerald
   exports.Sonic               = Sonic
+  exports.Big                 = Big
 
   exports.f                   = Emerald.f
 

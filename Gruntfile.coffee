@@ -55,6 +55,7 @@ module.exports = ( grunt ) ->
         options:
           vendor: [
             "bower_components/sonic/dist/sonic.js",
+            "bower_components/big.js/big.js",
           ]
           keepRunner: true
           specs: specs

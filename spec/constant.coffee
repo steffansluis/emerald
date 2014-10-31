@@ -5,4 +5,4 @@ describe "constant", ->
     @constant = new Emerald.Constant @number
 
   it "should have set the number as the inner of the constant", ->
-    expect(@constant.inner).toBe(@number)
+    expect(@constant.inner).toEqual(new Emerald.Big(@number))

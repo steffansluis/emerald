@@ -1,6 +1,7 @@
 Emerald =
 
   Sonic: Sonic
+  Big: Big
 
   f: ( fn ) ->
     return fn if fn instanceof AbstractFn

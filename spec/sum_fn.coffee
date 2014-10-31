@@ -11,4 +11,4 @@ describe "SumFn", ->
       @result = @product.evaluate()
 
     it "should return the product of the left and right value", ->
-      expect(@result).toBe(8)
+      expect(@result).toEqual(new Emerald.Big(8))
