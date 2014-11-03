@@ -3,8 +3,6 @@ Emerald.factory = ( exports ) ->
   exports.Sonic               = Sonic
   exports.Big                 = Big
 
-  exports.f                   = Emerald.f
-
   exports.AbstractFn          = AbstractFn
   exports.Constant            = Constant
   exports.PowerFn             = PowerFn
@@ -24,4 +22,4 @@ else if typeof define == 'function' && define.amd
     Emerald.factory(@Emerald = exports)
     return exports
 else
-  Emerald.factory(@Emerald = {})
+  Emerald.factory(@Emerald = Emerald)

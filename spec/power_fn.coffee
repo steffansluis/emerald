@@ -7,8 +7,8 @@ describe "PowerFn", ->
       @value1 = new Emerald.Constant(5)
       @value2 = new Emerald.Constant(2)
 
-      @exp1 = Emerald.f(2)
-      @exp2 = Emerald.f(3)
+      @exp1 = Emerald(2)
+      @exp2 = Emerald(3)
 
       @square = new Emerald.PowerFn exp: @exp1, value: @value1
       @cube = new Emerald.PowerFn exp: @exp2, value: @value2

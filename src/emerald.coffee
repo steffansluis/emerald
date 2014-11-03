@@ -1,14 +1,15 @@
-Emerald =
+Emerald = ( item ) ->
 
-  Sonic: Sonic
-  Big: Big
+  # console.log "test", @
 
-  f: ( fn ) ->
-    return fn if fn instanceof AbstractFn
 
-    switch typeof fn
-      when "number"
-        return new Constant fn
-      when "function"
-        return new AbstractFn fn
+  return item if item instanceof AbstractFn
 
+  switch typeof item
+    when "number"
+      return new Constant item
+    when "function"
+      return new AbstractFn item
+
+Emerald.Sonic = Sonic
+Emerald.Big = Big
