@@ -6,7 +6,9 @@ module.exports = ( grunt ) ->
     'src/constant.coffee'
     'src/power_fn.coffee'
     'src/product_fn.coffee'
+    'src/rational_fn.coffee'
     'src/sum_fn.coffee'
+    'src/difference_fn.coffee'
 
     'src/export.coffee'
   ]
@@ -18,7 +20,9 @@ module.exports = ( grunt ) ->
     '.grunt/emerald/spec_compiled/constant.js'
     '.grunt/emerald/spec_compiled/power_fn.js'
     '.grunt/emerald/spec_compiled/product_fn.js'
+    '.grunt/emerald/spec_compiled/rational_fn.js'
     '.grunt/emerald/spec_compiled/sum_fn.js'
+    '.grunt/emerald/spec_compiled/difference_fn.js'
 
     # '.grunt/emerald/spec_compiled/export.js'
   ]

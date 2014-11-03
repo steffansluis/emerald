@@ -7,7 +7,9 @@ Emerald.factory = ( exports ) ->
   exports.Constant            = Constant
   exports.PowerFn             = PowerFn
   exports.ProductFn           = ProductFn
+  exports.RationalFn          = RationalFn
   exports.SumFn               = SumFn
+  exports.DifferenceFn        = DifferenceFn
 
   # exports.configure = ( options={} ) ->
   #   for property, value of options

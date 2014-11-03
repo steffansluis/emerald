@@ -10,8 +10,8 @@ describe "PowerFn", ->
       @exp1 = Emerald(2)
       @exp2 = Emerald(3)
 
-      @square = new Emerald.PowerFn exp: @exp1, value: @value1
-      @cube = new Emerald.PowerFn exp: @exp2, value: @value2
+      @square = new Emerald.PowerFn exp: @exp1, inner: @value1
+      @cube = new Emerald.PowerFn exp: @exp2, inner: @value2
 
       @result1 = @square.evaluate()
       @result2 = @cube.evaluate()

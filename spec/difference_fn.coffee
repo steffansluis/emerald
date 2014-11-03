@@ -1,14 +1,14 @@
-describe "ProductFn", ->
+describe "DifferenceFn", ->
 
   beforeEach ->
 
   describe "evaluate", ->
     beforeEach ->
       @left = new Emerald.Constant 2
-      @right = new Emerald.Constant 4
-      @product = new Emerald.ProductFn left: @left, right: @right
+      @right = new Emerald.Constant 6
+      @product = new Emerald.DifferenceFn left: @left, right: @right
 
       @result = @product.evaluate()
 
     it "should return the product of the left and right value", ->
-      expect(@result).toEqual(Emerald.Big(8))
+      expect(@result).toEqual(new Emerald.Big(-4))

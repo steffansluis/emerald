@@ -1,9 +1,8 @@
 Emerald = ( item ) ->
-
-  # console.log "test", @
-
-
-  return item if item instanceof AbstractFn
+  if item instanceof AbstractFn
+    return item
+  else if item instanceof Emerald.Big
+    return new Constant item
 
   switch typeof item
     when "number"

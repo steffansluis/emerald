@@ -2,14 +2,12 @@ class ProductFn extends AbstractFn
 
 
   constructor: ( options ) ->
-    if typeof options is "number"
-      options = right: new Constant(options)
     super options
-    @left = options.left
-    @right = options.right
+    @left = Emerald options.left
+    @right = Emerald options.right
 
   evaluate: (left, right) ->
-    @left.evaluate() * @right.evaluate()
+    @left.evaluate().times @right.evaluate()
 
   toString: () ->
     left = @left.toString()

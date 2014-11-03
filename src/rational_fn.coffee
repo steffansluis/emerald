@@ -1,5 +1,4 @@
-class SumFn extends AbstractFn
-
+class RationalFn extends AbstractFn
 
   constructor: ( options ) ->
     super options
@@ -7,9 +6,9 @@ class SumFn extends AbstractFn
     @right = Emerald options.right
 
   evaluate: (left, right) ->
-    @left.evaluate().plus @right.evaluate()
+    @left.evaluate().div @right.evaluate()
 
   toString: () ->
     left = @left.toString()
     right = @right.toString()
-    "(#{left}+#{right})"
+    "(#{left}/#{right})"

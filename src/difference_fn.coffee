@@ -1,4 +1,4 @@
-class SumFn extends AbstractFn
+class DifferenceFn extends AbstractFn
 
 
   constructor: ( options ) ->
@@ -7,9 +7,9 @@ class SumFn extends AbstractFn
     @right = Emerald options.right
 
   evaluate: (left, right) ->
-    @left.evaluate().plus @right.evaluate()
+    @left.evaluate().minus @right.evaluate()
 
   toString: () ->
     left = @left.toString()
     right = @right.toString()
-    "(#{left}+#{right})"
+    "(#{left}-#{right})"
