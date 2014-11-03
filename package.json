@@ -23,7 +23,7 @@
   "keywords": [
     "mathematics",
     "sonic",
-    "emerald",
+    "emerald"
   ],
 
   "main": "dist/emerald.js",
