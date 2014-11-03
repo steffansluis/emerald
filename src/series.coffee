@@ -3,7 +3,7 @@ class Series extends Sequence
   constructor: (options = {}) ->
     @_sum = 0
     fn = (value) =>
-      sum = Emerald.f(@_sum).sum(Emerald.f(value))
+      sum = Emerald(@_sum).sum(Emerald(value))
       @_sum = sum
       return sum
     options.fn ||= fn
