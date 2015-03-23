@@ -1,197 +1,113 @@
 module.exports = ( grunt ) ->
   srcs = [
-    'src/emerald.coffee'
-
-    'src/abstract_fn.coffee'
-    'src/constant.coffee'
-    'src/power_fn.coffee'
-    'src/product_fn.coffee'
-    'src/rational_fn.coffee'
-    'src/sum_fn.coffee'
-    'src/difference_fn.coffee'
-
-    'src/export.coffee'
+    'emerald'
+    # 'signal'
+    # 'temporal_list'
   ]
 
-  specs = [
-    '.grunt/emerald/spec_compiled/emerald.js'
+  # Coverage thresholds
+  thresholds =
+    lines: 60
+    statements: 60
+    branches: 60
+    functions: 60
 
-    '.grunt/emerald/spec_compiled/abstract_fn.js'
-    '.grunt/emerald/spec_compiled/constant.js'
-    '.grunt/emerald/spec_compiled/power_fn.js'
-    '.grunt/emerald/spec_compiled/product_fn.js'
-    '.grunt/emerald/spec_compiled/rational_fn.js'
-    '.grunt/emerald/spec_compiled/sum_fn.js'
-    '.grunt/emerald/spec_compiled/difference_fn.js'
 
-    # '.grunt/emerald/spec_compiled/export.js'
-  ]
+  # This functions makes the config shorter and clearer later on.
+  # It just returns the type specific coverage config
+  coverage = ( type, optionsRef ) ->
+    optionsRef.template = require('grunt-template-jasmine-istanbul')
+    optionsRef.templateOptions =
+      coverage: 'statistics/coverage/coverage.json'
+      thresholds: thresholds
+      report:
+        type: type
+        options:
+          dir: "statistics/coverage/#{type}"
+
+    return optionsRef
+
+
+  # Configure all the tasks!
 
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json')
 
     coffee:
-      dist:
-        options:
-          join: true
-        files:
-          'dist/emerald.js': srcs
-
-      build:
-        options:
-          join: true
-          sourceMap: true
-        files:
-          'build/emerald.js': srcs
+      default:
+        # options:
+          # sourceMap: true
+        files: [
+          expand: true
+          cwd: 'src'
+          src: srcs.map ( src ) -> src + '.coffee'
+          dest: 'dist'
+          ext: '.js'
+        ]
 
       spec:
+        # options:
+        #   sourceMap: true
         files: [
           expand: true
           cwd: 'spec'
           src: ['**/*.coffee']
-          dest: '.grunt/emerald/spec_compiled'
+          dest: 'build/spec'
           ext: '.js'
         ]
 
-    jasmine:
-      build:
-        src: ['build/**/*.js']
+    browserify:
+      default:
+        files: 'dist/emerald.browser.js': 'dist/emerald.js'
         options:
-          vendor: [
-            "bower_components/sonic/dist/sonic.js",
-            "bower_components/big.js/big.js",
-          ]
+          sourceMap: false
+          browserifyOptions:
+            standalone: 'Emerald'
+
+    jasmine:
+      default:
+        src:  ['dist/emerald.browser.js']
+        options:
           keepRunner: true
-          specs: specs
-          template: require('grunt-template-jasmine-istanbul')
-          templateOptions:
-            coverage: 'statistics/coverage/coverage.json'
-            report:
-              type: 'lcovonly'
-              options:
-                dir: 'statistics/coverage/lcov'
-            thresholds:
-              lines: 60
-              statements: 60
-              branches: 60
-              functions: 60
+          specs: 'build/spec/**/*.js'
+      lcovonly:
+        src:  ['dist/emerald.browser.js']
+        options: (coverage 'lcovonly',
+          keepRunner: true
+          specs: 'build/spec/**/*.js'
+        )
+      html:
+        src: ['dist/emerald.browser.js']
+        options: (coverage 'html',
+          specs: 'build/spec/**/*.js'
+        )
 
     clean:
       build: ['build']
-      spec:  ['.grunt/emerald/spec_compiled']
-      grunt: ['.grunt']
 
     watch:
-      all:
+      dist:
         files: ['src/**/*.coffee']
-        tasks: ['coffee:dist', 'coffee:spec']
+        tasks: ['coffee:dist']
+      spec:
+        files: ['src/**/*.coffee', 'spec/**/*.coffee']
+        tasks: ['spec']
+      build:
+        files: ['src/**/*.coffee']
+        tasks: ['coffee:build']
 
+    codo:
+      files: ['src/**/*.coffee']
+
+  # grunt.loadNpmTasks 'grunt-babel'
+  grunt.loadNpmTasks 'grunt-browserify'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
+  grunt.loadNpmTasks 'grunt-codo'
 
   grunt.registerTask 'default', ['watch']
-  grunt.registerTask 'build',   ['coffee:build']
-  grunt.registerTask 'dist',    ['coffee:dist']
-  grunt.registerTask 'spec',    ['clean:spec', 'coffee:build', 'coffee:spec', 'jasmine:build']
-
-
-
-# module.exports = ( grunt ) ->
-#   srcs = [
-#     'src/list.coffee'
-#   ]
-
-#   grunt.initConfig
-#     pkg: grunt.file.readJSON('package.json')
-
-#     meta:
-#       banner:
-#         '// Collection\n' +
-#         '// version: <%= pkg.version %>\n' +
-#         '// contributors: <%= pkg.contributors %>\n' +
-#         '// license: <%= pkg.licenses[0].type %>\n'
-
-#     coffee:
-#       dist:
-#         options:
-#           join: true
-#         files:
-#           'dist/list.js': 'src/list.coffee'
-
-#       build:
-#         options:
-#           join: true
-#           sourceMap: true
-#         files:
-#           'build/list.js': 'src/list.coffee'
-
-#       spec:
-#         files: [
-#           expand: true
-#           cwd: 'spec'
-#           src: ['**/*.coffee']
-#           dest: '.grunt/list/spec_compiled'
-#           ext: '.js'
-#         ]
-
-#     jasmine:
-#       build:
-#         src: ['build/list.js']
-#         options:
-#           specs: '.grunt/list/spec_compiled/**/*.js'
-#           vendor: []
-#           template: require('grunt-template-jasmine-istanbul')
-#           templateOptions:
-#             coverage: 'statistics/coverage/coverage.json'
-#             report:
-#               type: 'lcovonly'
-#               options:
-#                 dir: '.grunt/list/coverage/lcov'
-#             thresholds:
-#               lines: 60
-#               statements: 60
-#               branches: 60
-#               functions: 60
-#       html:
-#         src: ['build/list.js']
-#         options:
-#           specs: '.grunt/list/spec_compiled/**/*.js'
-#           vendor: []
-#           template: require('grunt-template-jasmine-istanbul')
-#           templateOptions:
-#             coverage: 'statistics/coverage/coverage.json'
-#             report:
-#               type: 'html'
-#               options:
-#                 dir: 'statistics/coverage/html'
-#             thresholds:
-#               lines: 60
-#               statements: 60
-#               branches: 60
-#               functions: 60
-
-#     plato:
-#       all:
-#         options:
-#           jshint: false
-#         files:
-#           'statistics/complexity' : ['.grunt/list/src_compiled/**/*.js']
-
-
-#     clean:
-#       build: ['build']
-#       spec:  ['.grunt/list/spec_compiled']
-#       grunt: ['.grunt']
-
-#     watch:
-#       all:
-#         files: 'src/**/*.coffee'
-#         tasks: ['build', 'spec']
-
-#   grunt.registerTask 'watch',   ['coffee:build', 'watch']
-#   grunt.registerTask 'spec',    ['clean:spec', 'coffee:build', 'coffee:spec', 'jasmine:build', 'clean:spec']
-#   grunt.registerTask 'build',   ['coffee:build']
-#   grunt.registerTask 'dist',    ['coffee:dist']
-#   grunt.registerTask 'analyze', ['coffee','jasmine:html', 'plato']
+  grunt.registerTask 'dist',    ['coffee', 'browserify']
+  grunt.registerTask 'spec',    ['clean', 'dist', 'coffee:spec' ,'jasmine:default']
+  grunt.registerTask 'test',    ['spec' ,'jasmine:lcovonly']
