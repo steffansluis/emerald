@@ -1,3 +1,5 @@
+AbstractFn = require('./abstract_fn')
+
 class RationalFn extends AbstractFn
 
   constructor: ( options ) ->
@@ -12,3 +14,5 @@ class RationalFn extends AbstractFn
     left = @left.toString()
     right = @right.toString()
     "(#{left}/#{right})"
+
+module.exports = RationalFn

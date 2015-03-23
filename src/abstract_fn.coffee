@@ -1,4 +1,6 @@
-class AbstractFn extends Emerald.Sonic.MappedList
+Unit = require('sonic/dist/unit')
+
+class AbstractFn extends Unit
 
   constructor: (options = {}) ->
     if typeof options is "function"
@@ -41,3 +43,4 @@ class AbstractFn extends Emerald.Sonic.MappedList
   toString: () ->
     "#{@inner?.toString()}"
 
+module.exports = AbstractFn

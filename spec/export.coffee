@@ -1,7 +1,7 @@
-describe "export", ->
+# describe "export", ->
 
-  it "should export sega to the provided object", ->
-    atari = {}
-    sega._.factory(atari)
+#   it "should export sega to the provided object", ->
+#     atari = {}
+#     sega._.factory(atari)
 
-    expect(atari).toEqual(sega)
+#     expect(atari).toEqual(sega)

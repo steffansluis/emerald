@@ -1,16 +1,25 @@
 module.exports = ( grunt ) ->
   srcs = [
     'emerald'
-    # 'signal'
-    # 'temporal_list'
+
+    'factory'
+    'utilities'
+
+    'abstract_fn'
+    'constant'
+    'sum_fn'
+    'difference_fn'
+    'product_fn'
+    'rational_fn'
+    'power_fn'
   ]
 
   # Coverage thresholds
   thresholds =
-    lines: 60
-    statements: 60
-    branches: 60
-    functions: 60
+    lines: 40
+    # statements: 40
+    # branches: 40
+    # functions: 40
 
 
   # This functions makes the config shorter and clearer later on.

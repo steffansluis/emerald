@@ -1,27 +1,33 @@
-Sonic =        require('sonic')
-Big   =        require('big.js')
+Sonic         =        require('sonic')
+Big           =        require('big.js')
 
-Emerald = ( item ) ->
-  # if item instanceof AbstractFn
-  #   return item
-  # else if item instanceof Emerald.Big
-  #   return new Constant item
+factory       =        require('./factory')
+utilities     =        require('./utilities')
 
-  # switch typeof item
-  #   when "number"
-  #     return new Constant item
-  #   when "function"
-  #     return new AbstractFn item
+AbstractFn    =        require('./abstract_fn')
+Constant      =        require('./constant')
+SumFn         =        require('./sum_fn')
+DifferenceFn  =        require('./difference_fn')
+ProductFn     =        require('./product_fn')
+RationalFn    =        require('./rational_fn')
+PowerFn       =        require('./power_fn')
+
+Emerald = factory
+
+for key, value of utilities
+  do (key, value) =>
+    Emerald[key] = (obj, args...) -> value.apply(factory(obj), args)
 
 Emerald._                   = Emerald
 Emerald.Sonic               = Sonic
 Emerald.Big                 = Big
-# Emerald.AbstractFn          = AbstractFn
-# Emerald.Constant            = Constant
-# Emerald.PowerFn             = PowerFn
-# Emerald.ProductFn           = ProductFn
-# Emerald.RationalFn          = RationalFn
-# Emerald.SumFn               = SumFn
-# Emerald.DifferenceFn        = DifferenceFn
+
+Emerald.AbstractFn          = AbstractFn
+Emerald.Constant            = Constant
+Emerald.SumFn               = SumFn
+Emerald.DifferenceFn        = DifferenceFn
+Emerald.ProductFn           = ProductFn
+Emerald.RationalFn          = RationalFn
+Emerald.PowerFn             = PowerFn
 
 module.exports = Emerald

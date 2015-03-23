@@ -1,5 +1,6 @@
-class SumFn extends AbstractFn
+AbstractFn = require('./abstract_fn')
 
+class SumFn extends AbstractFn
 
   constructor: ( options ) ->
     super options
@@ -13,3 +14,5 @@ class SumFn extends AbstractFn
     left = @left.toString()
     right = @right.toString()
     "(#{left}+#{right})"
+
+module.exports = SumFn

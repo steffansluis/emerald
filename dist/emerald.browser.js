@@ -1,12 +1,227 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Emerald = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var Big, Emerald, Sonic;
+  var AbstractFn, Unit,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Unit = require('sonic/dist/unit');
+
+  AbstractFn = (function(_super) {
+    __extends(AbstractFn, _super);
+
+    function AbstractFn(options) {
+      if (options == null) {
+        options = {};
+      }
+      if (typeof options === "function") {
+        if (options instanceof AbstractFn || options instanceof Emerald.Big) {
+          this.inner = options;
+        } else {
+          options.apply(this);
+        }
+      } else {
+        switch (typeof options) {
+          case "object":
+            this.inner = options.inner;
+            break;
+          case "number":
+            this.inner = new Emerald.Big(options);
+        }
+      }
+    }
+
+    AbstractFn.prototype.power = function(exp) {
+      var options;
+      options = {
+        exp: Emerald(exp),
+        fn: this
+      };
+      return new PowerFn(options);
+    };
+
+    AbstractFn.prototype.square = function() {
+      return this.power(2);
+    };
+
+    AbstractFn.prototype.cube = function() {
+      return this.power(3);
+    };
+
+    AbstractFn.prototype.sqrt = function() {
+      return this.power(0.5);
+    };
+
+    AbstractFn.prototype.nroot = function(n) {
+      return this.power(Emerald(1).over(n));
+    };
+
+    AbstractFn.prototype.product = function(right) {
+      return new ProductFn({
+        left: this,
+        right: Emerald(right)
+      });
+    };
+
+    AbstractFn.prototype.times = function(right) {
+      return this.product(right);
+    };
+
+    AbstractFn.prototype.divide = function(right) {
+      return new RationalFn({
+        left: this,
+        right: Emerald(right)
+      });
+    };
+
+    AbstractFn.prototype.over = function(right) {
+      return this.divide(right);
+    };
+
+    AbstractFn.prototype.faculty = function() {
+      if (this.inner.evaluate().eq(Emerald(0).evaluate())) {
+        return 1;
+      } else {
+        return this.product(this.minus(1).faculty());
+      }
+    };
+
+    AbstractFn.prototype.sum = function(right) {
+      return new SumFn({
+        left: this,
+        right: Emerald(right)
+      });
+    };
+
+    AbstractFn.prototype.minus = function(right) {
+      return new DifferenceFn({
+        left: this,
+        right: Emerald(right)
+      });
+    };
+
+    AbstractFn.prototype.toString = function() {
+      var _ref;
+      return "" + ((_ref = this.inner) != null ? _ref.toString() : void 0);
+    };
+
+    return AbstractFn;
+
+  })(Unit);
+
+  module.exports = AbstractFn;
+
+}).call(this);
+
+},{"sonic/dist/unit":21}],2:[function(require,module,exports){
+(function() {
+  var AbstractFn, Constant,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  AbstractFn = require('./abstract_fn');
+
+  Constant = (function(_super) {
+    __extends(Constant, _super);
+
+    function Constant(options) {
+      if (options == null) {
+        options = {};
+      }
+      Constant.__super__.constructor.call(this, options);
+    }
+
+    Constant.prototype.integrate = function() {};
+
+    Constant.prototype.evaluate = function() {
+      return this.inner;
+    };
+
+    return Constant;
+
+  })(AbstractFn);
+
+  module.exports = Constant;
+
+}).call(this);
+
+},{"./abstract_fn":1}],3:[function(require,module,exports){
+(function() {
+  var AbstractFn, DifferenceFn,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  AbstractFn = require('./abstract_fn');
+
+  DifferenceFn = (function(_super) {
+    __extends(DifferenceFn, _super);
+
+    function DifferenceFn(options) {
+      DifferenceFn.__super__.constructor.call(this, options);
+      this.left = Emerald(options.left);
+      this.right = Emerald(options.right);
+    }
+
+    DifferenceFn.prototype.evaluate = function(left, right) {
+      return this.left.evaluate().minus(this.right.evaluate());
+    };
+
+    DifferenceFn.prototype.toString = function() {
+      var left, right;
+      left = this.left.toString();
+      right = this.right.toString();
+      return "(" + left + "-" + right + ")";
+    };
+
+    return DifferenceFn;
+
+  })(AbstractFn);
+
+  module.exports = DifferenceFn;
+
+}).call(this);
+
+},{"./abstract_fn":1}],4:[function(require,module,exports){
+(function() {
+  var AbstractFn, Big, Constant, DifferenceFn, Emerald, PowerFn, ProductFn, RationalFn, Sonic, SumFn, factory, key, utilities, value, _fn,
+    __slice = [].slice;
 
   Sonic = require('sonic');
 
   Big = require('big.js');
 
-  Emerald = function(item) {};
+  factory = require('./factory');
+
+  utilities = require('./utilities');
+
+  AbstractFn = require('./abstract_fn');
+
+  Constant = require('./constant');
+
+  SumFn = require('./sum_fn');
+
+  DifferenceFn = require('./difference_fn');
+
+  ProductFn = require('./product_fn');
+
+  RationalFn = require('./rational_fn');
+
+  PowerFn = require('./power_fn');
+
+  Emerald = factory;
+
+  _fn = (function(_this) {
+    return function(key, value) {
+      return Emerald[key] = function() {
+        var args, obj;
+        obj = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+        return value.apply(factory(obj), args);
+      };
+    };
+  })(this);
+  for (key in utilities) {
+    value = utilities[key];
+    _fn(key, value);
+  }
 
   Emerald._ = Emerald;
 
@@ -14,11 +229,218 @@
 
   Emerald.Big = Big;
 
+  Emerald.AbstractFn = AbstractFn;
+
+  Emerald.Constant = Constant;
+
+  Emerald.SumFn = SumFn;
+
+  Emerald.DifferenceFn = DifferenceFn;
+
+  Emerald.ProductFn = ProductFn;
+
+  Emerald.RationalFn = RationalFn;
+
+  Emerald.PowerFn = PowerFn;
+
   module.exports = Emerald;
 
 }).call(this);
 
-},{"big.js":2,"sonic":9}],2:[function(require,module,exports){
+},{"./abstract_fn":1,"./constant":2,"./difference_fn":3,"./factory":5,"./power_fn":6,"./product_fn":7,"./rational_fn":8,"./sum_fn":9,"./utilities":10,"big.js":11,"sonic":18}],5:[function(require,module,exports){
+(function() {
+  var AbstractFn, Constant, factory;
+
+  AbstractFn = require('./abstract_fn');
+
+  Constant = require('./constant');
+
+  factory = function(item) {
+    if (item instanceof AbstractFn) {
+      return item;
+    }
+    switch (typeof item) {
+      case "number":
+        return new Constant(item);
+      case "function":
+        return new AbstractFn(item);
+    }
+  };
+
+  module.exports = factory;
+
+}).call(this);
+
+},{"./abstract_fn":1,"./constant":2}],6:[function(require,module,exports){
+(function() {
+  var AbstractFn, PowerFn,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  AbstractFn = require('./abstract_fn');
+
+  PowerFn = (function(_super) {
+    __extends(PowerFn, _super);
+
+    function PowerFn(options) {
+      if (options == null) {
+        options = {};
+      }
+      if (typeof options === "number") {
+        options = {
+          exp: options
+        };
+      }
+      PowerFn.__super__.constructor.call(this, options);
+      this.exp = options.exp;
+    }
+
+    PowerFn.prototype.evaluate = function() {
+      var exp;
+      exp = parseFloat(this.exp.evaluate().toPrecision());
+      return this.inner.evaluate().pow(exp);
+    };
+
+    PowerFn.prototype.integrate = function() {
+      var primitive;
+      primitive = this.inner.intergrate().divide(this.exp);
+      primitive.exp++;
+      return primitive;
+    };
+
+    PowerFn.prototype.toString = function() {
+      var inner;
+      inner = this.inner.toString();
+      return "(" + inner + ")^" + this.exp;
+    };
+
+    return PowerFn;
+
+  })(AbstractFn);
+
+  module.exports = PowerFn;
+
+}).call(this);
+
+},{"./abstract_fn":1}],7:[function(require,module,exports){
+(function() {
+  var AbstractFn, ProductFn,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  AbstractFn = require('./abstract_fn');
+
+  ProductFn = (function(_super) {
+    __extends(ProductFn, _super);
+
+    function ProductFn(options) {
+      ProductFn.__super__.constructor.call(this, options);
+      this.left = Emerald(options.left);
+      this.right = Emerald(options.right);
+    }
+
+    ProductFn.prototype.evaluate = function(left, right) {
+      return this.left.evaluate().times(this.right.evaluate());
+    };
+
+    ProductFn.prototype.toString = function() {
+      var left, right;
+      left = this.left.toString();
+      right = this.right.toString();
+      return "(" + left + "*" + right + ")";
+    };
+
+    return ProductFn;
+
+  })(AbstractFn);
+
+  module.exports = ProductFn;
+
+}).call(this);
+
+},{"./abstract_fn":1}],8:[function(require,module,exports){
+(function() {
+  var AbstractFn, RationalFn,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  AbstractFn = require('./abstract_fn');
+
+  RationalFn = (function(_super) {
+    __extends(RationalFn, _super);
+
+    function RationalFn(options) {
+      RationalFn.__super__.constructor.call(this, options);
+      this.left = Emerald(options.left);
+      this.right = Emerald(options.right);
+    }
+
+    RationalFn.prototype.evaluate = function(left, right) {
+      return this.left.evaluate().div(this.right.evaluate());
+    };
+
+    RationalFn.prototype.toString = function() {
+      var left, right;
+      left = this.left.toString();
+      right = this.right.toString();
+      return "(" + left + "/" + right + ")";
+    };
+
+    return RationalFn;
+
+  })(AbstractFn);
+
+  module.exports = RationalFn;
+
+}).call(this);
+
+},{"./abstract_fn":1}],9:[function(require,module,exports){
+(function() {
+  var AbstractFn, SumFn,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  AbstractFn = require('./abstract_fn');
+
+  SumFn = (function(_super) {
+    __extends(SumFn, _super);
+
+    function SumFn(options) {
+      SumFn.__super__.constructor.call(this, options);
+      this.left = Emerald(options.left);
+      this.right = Emerald(options.right);
+    }
+
+    SumFn.prototype.evaluate = function(left, right) {
+      return this.left.evaluate().plus(this.right.evaluate());
+    };
+
+    SumFn.prototype.toString = function() {
+      var left, right;
+      left = this.left.toString();
+      right = this.right.toString();
+      return "(" + left + "+" + right + ")";
+    };
+
+    return SumFn;
+
+  })(AbstractFn);
+
+  module.exports = SumFn;
+
+}).call(this);
+
+},{"./abstract_fn":1}],10:[function(require,module,exports){
+(function() {
+  var utilities;
+
+  utilities = {};
+
+  module.exports = utilities;
+
+}).call(this);
+
+},{}],11:[function(require,module,exports){
 /* big.js v3.0.1 https://github.com/MikeMcl/big.js/LICENCE */
 ;(function (global) {
     'use strict';
@@ -1158,7 +1580,7 @@
     }
 })(this);
 
-},{}],3:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function() {
   var AbstractList, uniqueId;
 
@@ -1323,7 +1745,7 @@
 
 //# sourceMappingURL=abstract_list.js.map
 
-},{"./unique_id":11}],4:[function(require,module,exports){
+},{"./unique_id":20}],13:[function(require,module,exports){
 (function() {
   var AbstractList, List, Unit, factory;
 
@@ -1351,7 +1773,7 @@
 
 //# sourceMappingURL=factory.js.map
 
-},{"./abstract_list":3,"./list":8,"./unit":12}],5:[function(require,module,exports){
+},{"./abstract_list":12,"./list":17,"./unit":21}],14:[function(require,module,exports){
 (function() {
   var AbstractList, FlatMapList, Unit, factory,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -1538,7 +1960,7 @@
 
 //# sourceMappingURL=flat_map_list.js.map
 
-},{"./abstract_list":3,"./factory":4,"./unit":12}],6:[function(require,module,exports){
+},{"./abstract_list":12,"./factory":13,"./unit":21}],15:[function(require,module,exports){
 (function() {
   var FlatMapList, GroupList, Unit,
     __hasProp = {}.hasOwnProperty,
@@ -1587,7 +2009,7 @@
 
 //# sourceMappingURL=group_list.js.map
 
-},{"./flat_map_list":5,"./unit":12,"es6-collections":13}],7:[function(require,module,exports){
+},{"./flat_map_list":14,"./unit":21,"es6-collections":22}],16:[function(require,module,exports){
 (function() {
   var Iterator;
 
@@ -1656,7 +2078,7 @@
 
 //# sourceMappingURL=iterator.js.map
 
-},{}],8:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function() {
   var AbstractList, List,
     __hasProp = {}.hasOwnProperty,
@@ -1729,7 +2151,7 @@
 
 //# sourceMappingURL=list.js.map
 
-},{"./abstract_list":3}],9:[function(require,module,exports){
+},{"./abstract_list":12}],18:[function(require,module,exports){
 (function() {
   var AbstractList, FlatMapList, GroupList, Iterator, List, Sonic, TakeList, Unit, factory, fns, uniqueId,
     __slice = [].slice;
@@ -2050,7 +2472,7 @@
 
 //# sourceMappingURL=sonic.js.map
 
-},{"./abstract_list":3,"./factory":4,"./flat_map_list":5,"./group_list":6,"./iterator":7,"./list":8,"./take_list":10,"./unique_id":11,"./unit":12}],10:[function(require,module,exports){
+},{"./abstract_list":12,"./factory":13,"./flat_map_list":14,"./group_list":15,"./iterator":16,"./list":17,"./take_list":19,"./unique_id":20,"./unit":21}],19:[function(require,module,exports){
 (function() {
   var AbstractList, TakeList,
     __hasProp = {}.hasOwnProperty,
@@ -2135,7 +2557,7 @@
 
 //# sourceMappingURL=take_list.js.map
 
-},{"./abstract_list":3}],11:[function(require,module,exports){
+},{"./abstract_list":12}],20:[function(require,module,exports){
 (function() {
   var counter;
 
@@ -2149,7 +2571,7 @@
 
 //# sourceMappingURL=unique_id.js.map
 
-},{}],12:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 (function() {
   var List, Unit,
     __hasProp = {}.hasOwnProperty,
@@ -2195,7 +2617,7 @@
 
 //# sourceMappingURL=unit.js.map
 
-},{"./list":8}],13:[function(require,module,exports){
+},{"./list":17}],22:[function(require,module,exports){
 (function (global){
 (function (exports) {'use strict';
   //shared pointer
@@ -2427,5 +2849,5 @@
 })(typeof exports != 'undefined' && typeof global != 'undefined' ? global : window );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[1])(1)
+},{}]},{},[4])(4)
 });

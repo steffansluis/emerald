@@ -1,5 +1,6 @@
-class PowerFn extends AbstractFn
+AbstractFn = require('./abstract_fn')
 
+class PowerFn extends AbstractFn
 
   constructor: ( options = {} ) ->
     if typeof options is "number"
@@ -21,3 +22,5 @@ class PowerFn extends AbstractFn
   toString: () ->
     inner = @inner.toString()
     "(#{inner})^#{@exp}"
+
+module.exports = PowerFn

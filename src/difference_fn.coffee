@@ -1,5 +1,6 @@
-class DifferenceFn extends AbstractFn
+AbstractFn = require('./abstract_fn')
 
+class DifferenceFn extends AbstractFn
 
   constructor: ( options ) ->
     super options
@@ -13,3 +14,5 @@ class DifferenceFn extends AbstractFn
     left = @left.toString()
     right = @right.toString()
     "(#{left}-#{right})"
+
+module.exports = DifferenceFn
