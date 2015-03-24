@@ -27,12 +27,12 @@ module.exports = ( grunt ) ->
   coverage = ( type, optionsRef ) ->
     optionsRef.template = require('grunt-template-jasmine-istanbul')
     optionsRef.templateOptions =
-      coverage: 'statistics/coverage/coverage.json'
+      coverage: 'stat/coverage/coverage.json'
       thresholds: thresholds
       report:
         type: type
         options:
-          dir: "statistics/coverage/#{type}"
+          dir: "stat/coverage/#{type}"
 
     return optionsRef
 
@@ -73,20 +73,28 @@ module.exports = ( grunt ) ->
           browserifyOptions:
             standalone: 'Emerald'
 
+      istanbul:
+        files: 'build/spec/sonic.browser.js': 'dist/emerald.js'
+        options:
+          sourceMap: true
+          transform: [require('browserify-istanbul')]
+          browserifyOptions:
+            standalone: 'Emerald'
+
     jasmine:
       default:
-        src:  ['dist/emerald.browser.js']
+        src:  ['build/spec/emerald.browser.js']
         options:
           keepRunner: true
           specs: 'build/spec/**/*.js'
       lcovonly:
-        src:  ['dist/emerald.browser.js']
+        src:  ['build/spec/emerald.browser.js']
         options: (coverage 'lcovonly',
           keepRunner: true
           specs: 'build/spec/**/*.js'
         )
       html:
-        src: ['dist/emerald.browser.js']
+        src: ['build/spec/emerald.browser.js']
         options: (coverage 'html',
           specs: 'build/spec/**/*.js'
         )

@@ -2,12 +2,11 @@
   "name": "emerald",
   "description": "Making shiny mathemagics using Sonic.js",
   "version": "0.0.1",
-
   "authors": [
     "Steffan Sluis <steffansluis@gmail.com>",
     "Joost Verdoorn <jpverdoorn@gmail.com>"
   ],
-  "main": "./dist/emerald.js",
+  "main": "dist/emerald.js",
   "licenses": [
     {
       "type": "MIT",
@@ -18,7 +17,6 @@
     "type": "git",
     "url": "https://github.com/steffansluis/emerald.git"
   },
-
   "homepage": "https://github.com/steffansluis/emerald",
   "keywords": [
     "mathematics",
@@ -40,13 +38,14 @@
     "integral",
     "differential"
   ],
-
-  "main": "dist/emerald.js",
   "scripts": {
-    "test": "grunt spec"
+    "test": "grunt test"
   },
   "devDependencies": {
     "babel-core": "^4.0.0",
+    "big": "MikeMcl/big.js#master",
+    "browserify-istanbul": "^0.2.1",
+    "coveralls": "~2.11.1",
     "grunt": "~0.4.5",
     "grunt-babel": "^4.0.0",
     "grunt-browserify": "^3.5.0",
@@ -60,12 +59,7 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-plato": "~1.3.0",
     "grunt-requirejs": "~0.4.2",
-    "grunt-template-jasmine-istanbul": "~0.3.0",
-    "coveralls": "~2.11.1",
-    "big": "MikeMcl/big.js#master"
-  },
-  "scripts": {
-    "test": "grunt test"
+    "grunt-template-jasmine-istanbul": "~0.3.0"
   },
   "dependencies": {
     "sonic": "joostverdoorn/sonic#tests"
