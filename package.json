@@ -62,6 +62,6 @@
     "grunt-template-jasmine-istanbul": "~0.3.0"
   },
   "dependencies": {
-    "sonic": "joostverdoorn/sonic#tests"
+    "sonic": "joostverdoorn/sonic#develop"
   }
 }
