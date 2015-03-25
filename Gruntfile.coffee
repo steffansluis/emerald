@@ -83,7 +83,7 @@ module.exports = ( grunt ) ->
 
     jasmine:
       default:
-        src:  ['build/spec/emerald.browser.js']
+        src:  ['dist/emerald.browser.js']
         options:
           keepRunner: true
           specs: 'build/spec/**/*.js'
@@ -109,9 +109,6 @@ module.exports = ( grunt ) ->
       spec:
         files: ['src/**/*.coffee', 'spec/**/*.coffee']
         tasks: ['spec']
-      build:
-        files: ['src/**/*.coffee']
-        tasks: ['coffee:build']
 
     codo:
       files: ['src/**/*.coffee']
@@ -125,6 +122,6 @@ module.exports = ( grunt ) ->
   grunt.loadNpmTasks 'grunt-codo'
 
   grunt.registerTask 'default', ['watch']
-  grunt.registerTask 'dist',    ['coffee', 'browserify']
+  grunt.registerTask 'dist',    ['coffee', 'browserify:default']
   grunt.registerTask 'spec',    ['clean', 'dist', 'coffee:spec' ,'jasmine:default']
-  grunt.registerTask 'test',    ['spec' ,'jasmine:lcovonly']
+  grunt.registerTask 'test',    ['spec', 'browserify:istanbul' ,'jasmine:lcovonly']

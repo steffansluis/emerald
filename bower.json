@@ -1,0 +1,35 @@
+{
+  "name": "emerald",
+  "version": "0.0.1",
+  "authors": [
+    "Steffan Sluis <steffansluis@gmail.com>"
+  ],
+  "contributors": [
+    "Joost Verdoorn <jpverdoorn@gmail.com>"
+  ],
+  "description": "Making shiny mathemagics using Sonic.js",
+  "main": "dist/emerald.js",
+  "keywords": [
+    "javascript",
+    "coffeescript",
+    "math",
+    "collection",
+    "infinite",
+    "lazy",
+    "binary",
+    "search",
+    "avl",
+    "tree",
+    "function",
+    "sum",
+    "difference",
+    "integral",
+    "differential"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/steffansluis/emerald",
+  "dependencies": {
+    "sonic": "joostverdoorn/sonic#develop",
+    "big.js": "MikeMcl/big.js#~2.5.1"
+  }
+}
