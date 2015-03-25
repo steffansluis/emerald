@@ -12,13 +12,9 @@ ProductFn     =        require('./product_fn')
 RationalFn    =        require('./rational_fn')
 PowerFn       =        require('./power_fn')
 
-Emerald = factory
+Emerald = -> factory(arguments...)
 
-for key, value of utilities
-  do (key, value) =>
-    Emerald[key] = (obj, args...) -> value.apply(factory(obj), args)
-
-Emerald._                   = Emerald
+Emerald.factory             = factory
 Emerald.Sonic               = Sonic
 Emerald.Big                 = Big
 
@@ -29,5 +25,17 @@ Emerald.DifferenceFn        = DifferenceFn
 Emerald.ProductFn           = ProductFn
 Emerald.RationalFn          = RationalFn
 Emerald.PowerFn             = PowerFn
+
+
+fns = ["abs", "cmp", "div", "eq", "gt", "gte", "lt", "lte", "minus", "sub",
+"mod", "plus", "add", "pow", "round", "sqrt", "times", "mul", "toExponential", "toFixed", "toPrecision"]
+
+fns.forEach ( key ) ->
+  Emerald.Sonic.AbstractList::[key] = ( args... ) ->
+    @map (value) -> Big(value)[key](args...)
+
+# for key, value of utilities
+#   do (key, value) =>
+#     Emerald[key] = (obj, args...) -> value.apply(Emerald.factory(obj), args)
 
 module.exports = Emerald

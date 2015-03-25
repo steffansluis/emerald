@@ -1,10 +1,12 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Emerald = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var AbstractFn, Unit,
+  var AbstractFn, Unit, utilities,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Unit = require('sonic/dist/unit');
+
+  utilities = require('./utilities');
 
   AbstractFn = (function(_super) {
     __extends(AbstractFn, _super);
@@ -30,75 +32,6 @@
       }
     }
 
-    AbstractFn.prototype.power = function(exp) {
-      var options;
-      options = {
-        exp: Emerald(exp),
-        fn: this
-      };
-      return new PowerFn(options);
-    };
-
-    AbstractFn.prototype.square = function() {
-      return this.power(2);
-    };
-
-    AbstractFn.prototype.cube = function() {
-      return this.power(3);
-    };
-
-    AbstractFn.prototype.sqrt = function() {
-      return this.power(0.5);
-    };
-
-    AbstractFn.prototype.nroot = function(n) {
-      return this.power(Emerald(1).over(n));
-    };
-
-    AbstractFn.prototype.product = function(right) {
-      return new ProductFn({
-        left: this,
-        right: Emerald(right)
-      });
-    };
-
-    AbstractFn.prototype.times = function(right) {
-      return this.product(right);
-    };
-
-    AbstractFn.prototype.divide = function(right) {
-      return new RationalFn({
-        left: this,
-        right: Emerald(right)
-      });
-    };
-
-    AbstractFn.prototype.over = function(right) {
-      return this.divide(right);
-    };
-
-    AbstractFn.prototype.faculty = function() {
-      if (this.inner.evaluate().eq(Emerald(0).evaluate())) {
-        return 1;
-      } else {
-        return this.product(this.minus(1).faculty());
-      }
-    };
-
-    AbstractFn.prototype.sum = function(right) {
-      return new SumFn({
-        left: this,
-        right: Emerald(right)
-      });
-    };
-
-    AbstractFn.prototype.minus = function(right) {
-      return new DifferenceFn({
-        left: this,
-        right: Emerald(right)
-      });
-    };
-
     AbstractFn.prototype.toString = function() {
       var _ref;
       return "" + ((_ref = this.inner) != null ? _ref.toString() : void 0);
@@ -112,7 +45,7 @@
 
 }).call(this);
 
-},{"sonic/dist/unit":21}],2:[function(require,module,exports){
+},{"./utilities":10,"sonic/dist/unit":21}],2:[function(require,module,exports){
 (function() {
   var AbstractFn, Constant,
     __hasProp = {}.hasOwnProperty,
@@ -182,7 +115,7 @@
 
 },{"./abstract_fn":1}],4:[function(require,module,exports){
 (function() {
-  var AbstractFn, Big, Constant, DifferenceFn, Emerald, PowerFn, ProductFn, RationalFn, Sonic, SumFn, factory, key, utilities, value, _fn,
+  var AbstractFn, Big, Constant, DifferenceFn, Emerald, PowerFn, ProductFn, RationalFn, Sonic, SumFn, factory, fns, utilities,
     __slice = [].slice;
 
   Sonic = require('sonic');
@@ -207,23 +140,11 @@
 
   PowerFn = require('./power_fn');
 
-  Emerald = factory;
+  Emerald = function() {
+    return factory.apply(null, arguments);
+  };
 
-  _fn = (function(_this) {
-    return function(key, value) {
-      return Emerald[key] = function() {
-        var args, obj;
-        obj = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-        return value.apply(factory(obj), args);
-      };
-    };
-  })(this);
-  for (key in utilities) {
-    value = utilities[key];
-    _fn(key, value);
-  }
-
-  Emerald._ = Emerald;
+  Emerald.factory = factory;
 
   Emerald.Sonic = Sonic;
 
@@ -243,11 +164,24 @@
 
   Emerald.PowerFn = PowerFn;
 
+  fns = ["abs", "cmp", "div", "eq", "gt", "gte", "lt", "lte", "minus", "sub", "mod", "plus", "add", "pow", "round", "sqrt", "times", "mul", "toExponential", "toFixed", "toPrecision"];
+
+  fns.forEach(function(key) {
+    return Emerald.Sonic.AbstractList.prototype[key] = function() {
+      var args;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return this.map(function(value) {
+        var _ref;
+        return (_ref = Big(value))[key].apply(_ref, args);
+      });
+    };
+  });
+
   module.exports = Emerald;
 
 }).call(this);
 
-},{"./abstract_fn":1,"./constant":2,"./difference_fn":3,"./factory":5,"./power_fn":6,"./product_fn":7,"./rational_fn":8,"./sum_fn":9,"./utilities":10,"big.js":11,"sonic":18}],5:[function(require,module,exports){
+},{"./abstract_fn":1,"./constant":2,"./difference_fn":3,"./factory":5,"./power_fn":6,"./product_fn":7,"./rational_fn":8,"./sum_fn":9,"./utilities":10,"big.js":11,"sonic":19}],5:[function(require,module,exports){
 (function() {
   var AbstractFn, Constant, factory;
 
@@ -434,13 +368,85 @@
 (function() {
   var utilities;
 
-  utilities = {};
+  utilities = {
+    power: function(exp) {
+      var PowerFn, factory, options;
+      factory = require('./factory');
+      PowerFn = require('./power_fn');
+      options = {
+        exp: factory(exp),
+        fn: this
+      };
+      return new PowerFn(options);
+    },
+    square: function() {
+      return this.power(2);
+    },
+    cube: function() {
+      return this.power(3);
+    },
+    sqrt: function() {
+      return this.power(0.5);
+    },
+    nroot: function(n) {
+      return this.power(factory(1).over(n));
+    },
+    product: function(right) {
+      var ProductFn, factory;
+      factory = require('./factory');
+      ProductFn = require('./product_fn');
+      return new ProductFn({
+        left: this,
+        right: factory(right)
+      });
+    },
+    times: function(right) {
+      return this.product(right);
+    },
+    divide: function(right) {
+      var RationalFn, factory;
+      factory = require('./factory');
+      RationalFn = require('./rational_fn');
+      return new RationalFn({
+        left: this,
+        right: factory(right)
+      });
+    },
+    over: function(right) {
+      return this.divide(right);
+    },
+    faculty: function() {
+      if (this.inner.evaluate().eq(factory(0).evaluate())) {
+        return 1;
+      } else {
+        return this.product(this.minus(1).faculty());
+      }
+    },
+    sum: function(right) {
+      var SumFn, factory;
+      factory = require('./factory');
+      SumFn = require('./sum_fn');
+      return new SumFn({
+        left: this,
+        right: factory(right)
+      });
+    },
+    minus: function(right) {
+      var DifferenceFn, factory;
+      factory = require('./factory');
+      DifferenceFn = require('./difference_fn');
+      return new DifferenceFn({
+        left: this,
+        right: factory(right)
+      });
+    }
+  };
 
   module.exports = utilities;
 
 }).call(this);
 
-},{}],11:[function(require,module,exports){
+},{"./difference_fn":3,"./factory":5,"./power_fn":6,"./product_fn":7,"./rational_fn":8,"./sum_fn":9}],11:[function(require,module,exports){
 /* big.js v3.0.1 https://github.com/MikeMcl/big.js/LICENCE */
 ;(function (global) {
     'use strict';
@@ -1582,9 +1588,11 @@
 
 },{}],12:[function(require,module,exports){
 (function() {
-  var AbstractList, uniqueId;
+  var AbstractList, key, uniqueId, utilities, value;
 
   uniqueId = require('./unique_id');
+
+  utilities = require('./utilities');
 
   AbstractList = (function() {
     function AbstractList() {
@@ -1670,16 +1678,14 @@
     AbstractList.prototype._add = function(value, prev, next) {
       var id;
       id = uniqueId();
+      this._byId[id] = value;
       if ((next != null) && (prev == null)) {
         prev = this._prev[next];
       }
       if ((prev != null) && (next == null)) {
         next = this._next[prev];
       }
-      if (!this._splice(prev, next, id)) {
-        return null;
-      }
-      this._byId[id] = value;
+      this._splice(prev, next, id);
       return id;
     };
 
@@ -1739,15 +1745,20 @@
 
   })();
 
+  for (key in utilities) {
+    value = utilities[key];
+    AbstractList.prototype[key] = value;
+  }
+
   module.exports = AbstractList;
 
 }).call(this);
 
 //# sourceMappingURL=abstract_list.js.map
 
-},{"./unique_id":20}],13:[function(require,module,exports){
+},{"./unique_id":20,"./utilities":22}],13:[function(require,module,exports){
 (function() {
-  var AbstractList, List, Unit, factory;
+  var AbstractList, List, Unit;
 
   AbstractList = require('./abstract_list');
 
@@ -1755,7 +1766,7 @@
 
   Unit = require('./unit');
 
-  factory = function(items) {
+  module.exports = function(items) {
     if (items instanceof AbstractList) {
       return items;
     } else if (Array.isArray(items)) {
@@ -1766,8 +1777,6 @@
       return new Unit();
     }
   };
-
-  module.exports = factory;
 
 }).call(this);
 
@@ -1977,7 +1986,6 @@
 
     function GroupList(source, groupFn) {
       var flatMapFn;
-      console.log(JSON.stringify(Object.keys(Map)));
       this._byValue = new Map;
       this._groupFn = groupFn || function(x) {
         return x;
@@ -2009,7 +2017,7 @@
 
 //# sourceMappingURL=group_list.js.map
 
-},{"./flat_map_list":14,"./unit":21,"es6-collections":22}],16:[function(require,module,exports){
+},{"./flat_map_list":14,"./unit":21,"es6-collections":23}],16:[function(require,module,exports){
 (function() {
   var Iterator;
 
@@ -2153,318 +2161,203 @@
 
 },{"./abstract_list":12}],18:[function(require,module,exports){
 (function() {
-  var AbstractList, FlatMapList, GroupList, Iterator, List, Sonic, TakeList, Unit, factory, fns, uniqueId,
+  var AbstractList, RangeList, factory,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  factory = require("./factory");
+
+  AbstractList = require("./abstract_list");
+
+  RangeList = (function(_super) {
+    __extends(RangeList, _super);
+
+    function RangeList(source, start, count) {
+      this._onCountInvalidate = __bind(this._onCountInvalidate, this);
+      this._onStartInvalidate = __bind(this._onStartInvalidate, this);
+      this._onSourceInvalidate = __bind(this._onSourceInvalidate, this);
+      RangeList.__super__.constructor.call(this);
+      this._indexById = {};
+      this._idByIndex = {};
+      this._source = factory(source);
+      this._source.onInvalidate(this._onSourceInvalidate);
+      this._start = factory(start || 0);
+      this._start.onInvalidate(this._onStartInvalidate);
+      this._count = factory(count || 0);
+      this._count.onInvalidate(this._onCountInvalidate);
+      start = this._start.last();
+      this._indexById[0] = -start - 1;
+      this._idByIndex[-start - 1] = 0;
+    }
+
+    RangeList.prototype.get = function(id) {
+      return this._source.get(id);
+    };
+
+    RangeList.prototype.has = function(id) {
+      var count, start, _ref;
+      start = this._start.last();
+      count = this._count.last();
+      return (0 <= (_ref = this._indexById[id]) && _ref < count);
+    };
+
+    RangeList.prototype.prev = function(id) {
+      var count, index, next, _ref;
+      if (id == null) {
+        id = 0;
+      }
+      count = this._count.last();
+      if (id === 0) {
+        return this._idByIndex[count - 1] || this.idAt(count - 1);
+      }
+      if ((index = this._indexById[id]) != null) {
+        if ((0 <= (_ref = index - 1) && _ref < count)) {
+          return this._idByIndex[index - 1];
+        } else {
+          return null;
+        }
+      }
+      while (next = this.next(next)) {
+        if (next === id) {
+          return this._source.prev(next);
+        }
+      }
+      return null;
+    };
+
+    RangeList.prototype.next = function(id) {
+      var count, current, index, next, _ref;
+      if (id == null) {
+        id = 0;
+      }
+      current = id;
+      count = this._count.last();
+      index = (_ref = this._indexById[id]) != null ? _ref : -this._start.last() - 1;
+      while (++index < count) {
+        if (!(next = this._idByIndex[index])) {
+          this._idByIndex[index] = next = this._source.next(current);
+          this._indexById[next] = index;
+        }
+        if ((id && current === id) || (!id && index === 0)) {
+          return next;
+        }
+        current = next;
+      }
+      return null;
+    };
+
+    RangeList.prototype._onSourceInvalidate = function(prev, next) {
+      if (prev in this._indexById) {
+        this._invalidate(prev);
+      }
+      return true;
+    };
+
+    RangeList.prototype._onStartInvalidate = function(prev, next) {
+      var start;
+      if (next === 0) {
+        start = this._start.last();
+        this._invalidate();
+        this._indexById[0] = -start - 1;
+        this._idByIndex[-start - 1] = 0;
+      }
+      return true;
+    };
+
+    RangeList.prototype._onCountInvalidate = function(prev, next) {
+      var count, id;
+      if (next === 0) {
+        count = this._count.last();
+        if (id = this._idByIndex[count]) {
+          this.invalidate(id);
+        }
+      }
+      return true;
+    };
+
+    RangeList.prototype._invalidate = function(prev, next) {
+      var id, index;
+      if (prev == null) {
+        prev = 0;
+      }
+      if (next == null) {
+        next = 0;
+      }
+      if (!(index = this._indexById[prev])) {
+        return;
+      }
+      while (id = this._idByIndex[++index]) {
+        delete this._idByIndex[index];
+        delete this._indexById[id];
+      }
+      return RangeList.__super__._invalidate.call(this, prev, 0);
+    };
+
+    return RangeList;
+
+  })(AbstractList);
+
+  module.exports = RangeList;
+
+}).call(this);
+
+//# sourceMappingURL=range_list.js.map
+
+},{"./abstract_list":12,"./factory":13}],19:[function(require,module,exports){
+(function() {
+  var Sonic, key, utilities, value, _fn,
     __slice = [].slice;
 
-  factory = require('./factory');
+  utilities = require('./utilities');
 
-  uniqueId = require('./unique_id');
-
-  Iterator = require('./iterator');
-
-  AbstractList = require('./abstract_list');
-
-  List = require('./list');
-
-  Unit = require('./unit');
-
-  FlatMapList = require('./flat_map_list');
-
-  GroupList = require('./group_list');
-
-  TakeList = require('./take_list');
-
-  Sonic = factory;
+  Sonic = function() {
+    return Sonic.factory.apply(Sonic, arguments);
+  };
 
   Sonic.unit = function(item) {
-    return new Unit(item);
+    return new Sonic.Unit(item);
   };
 
   Sonic.empty = function() {
-    return new Unit();
+    return new Sonic.Unit();
   };
 
-  Sonic.getIterator = function(list, start) {
-    list = Sonic(list);
-    return new Iterator(list, start);
-  };
-
-  Sonic.each = function(list, fn) {
-    list = Sonic(list);
-    return Sonic.forEach(list, fn);
-  };
-
-  Sonic.forEach = function(list, fn) {
-    var iterator;
-    list = Sonic(list);
-    iterator = Sonic.getIterator(list);
-    while (iterator.moveNext()) {
-      if (fn(iterator.current(), iterator.currentId) === false) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  Sonic.findId = function(list, fn) {
-    var result;
-    list = Sonic(list);
-    result = void 0;
-    Sonic.each(list, function(value, id) {
-      if (fn(value)) {
-        result = id;
-        return false;
-      }
-    });
-    return result;
-  };
-
-  Sonic.find = function(list, fn) {
-    list = Sonic(list);
-    return list.get(Sonic.findId(list, fn));
-  };
-
-  Sonic.idAt = function(list, index) {
-    var i;
-    list = Sonic(list);
-    i = 0;
-    return Sonic.findId(list, function() {
-      if (i++ === index) {
-        return true;
-      }
-    });
-  };
-
-  Sonic.idOf = function(list, value) {
-    list = Sonic(list);
-    return Sonic.findId(list, function(v) {
-      return v === value;
-    });
-  };
-
-  Sonic.at = function(list, index) {
-    list = Sonic(list);
-    return list.get(Sonic.idAt(list, index));
-  };
-
-  Sonic.indexOf = function(list, value) {
-    var i;
-    list = Sonic(list);
-    i = -1;
-    if (Sonic.some(list, function(v) {
-      i++;
-      return v === value;
-    })) {
-      return i;
-    } else {
-      return -1;
-    }
-  };
-
-  Sonic.some = function(list, predicate) {
-    list = Sonic(list);
-    return !Sonic.each(list, function() {
-      return !predicate.apply(null, arguments);
-    });
-  };
-
-  Sonic.any = function(list, predicate) {
-    list = Sonic(list);
-    return Sonic.some(list, predicate);
-  };
-
-  Sonic.contains = function(list, value) {
-    list = Sonic(list);
-    return Sonic.some(list, function(v) {
-      return v === value;
-    });
-  };
-
-  Sonic.first = function(list) {
-    list = Sonic(list);
-    return list.get(list.next());
-  };
-
-  Sonic.last = function(list) {
-    list = Sonic(list);
-    return list.get(list.prev());
-  };
-
-  Sonic.reduce = function(list, reduceFn, memo) {
-    list = Sonic(list);
-    Sonic.each(list, function(value, id) {
-      return reduceFn(memo, value, id);
-    });
-    return memo;
-  };
-
-  Sonic.flatMap = function(list, flatMapFn) {
-    list = Sonic(list);
-    return new FlatMapList(list, flatMapFn);
-  };
-
-  Sonic.group = function(list, groupFn) {
-    list = Sonic(list);
-    return new GroupList(list, groupFn);
-  };
-
-  Sonic.sort = function(list, sortFn) {
-    list = Sonic(list);
-    return new SortedList(list, {
-      sortFn: sortFn
-    });
-  };
-
-  Sonic.take = function(list, count) {
-    list = Sonic(list);
-    return new TakeList(list, count);
-  };
-
-  Sonic.map = function(list, mapFn) {
-    list = Sonic(list);
-    return Sonic.flatMap(list, function(value) {
-      return new Unit(mapFn(value));
-    });
-  };
-
-  Sonic.pluck = function(list, key) {
-    list = Sonic(list);
-    return Sonic.map(list, function(value) {
-      return value[key];
-    });
-  };
-
-  Sonic.invoke = function() {
-    var args, key, list;
-    list = arguments[0], key = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
-    list = Sonic(list);
-    return Sonic.map(list, function(value) {
-      return value[key].apply(value, args);
-    });
-  };
-
-  Sonic.filter = function(list, filterFn) {
-    list = Sonic(list);
-    return Sonic.flatMap(list, function(value) {
-      if (filterFn(value)) {
-        return new Unit(value);
+  _fn = (function(_this) {
+    return function(key, value) {
+      if (value instanceof Function) {
+        return Sonic[key] = function() {
+          var args, list;
+          list = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+          return value.apply(Sonic.factory(list), args);
+        };
       } else {
-        return new Unit();
+        return Sonic[key] = value;
       }
-    });
-  };
-
-  Sonic.concat = function() {
-    var list, lists;
-    lists = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    list = Sonic(list);
-    return Sonic.flatMap(lists, function(list) {
-      return list;
-    });
-  };
-
-  Sonic.flatten = function(list) {
-    list = Sonic(list);
-    return Sonic.flatMap(list, function(list) {
-      return list;
-    });
-  };
-
-  Sonic.uniq = function(list, groupFn) {
-    if (groupFn == null) {
-      groupFn = function(x) {
-        return x;
-      };
-    }
-    list = Sonic(list);
-    return Sonic.flatMap(Sonic.group(list, groupFn), function(list) {
-      return list.take(1);
-    });
-  };
-
-  Sonic.union = function() {
-    var list, lists;
-    lists = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    list = Sonic(list);
-    return Sonic.concat.apply(Sonic, lists).uniq();
-  };
-
-  Sonic.intersection = function(list, other) {
-    list = Sonic(list);
-    return Sonic.filter(list, other.contains);
-  };
-
-  Sonic.proxy = function(list, fns) {
-    var fn, key, proxy;
-    if (fns == null) {
-      fns = {
-        'get': 'get',
-        'has': 'has',
-        'prev': 'prev',
-        'next': 'next',
-        'onInvalidate': 'onInvalidate'
-      };
-    }
-    list = Sonic(list);
-    proxy = new AbstractList;
-    for (key in fns) {
-      fn = fns[key];
-      proxy[key] = list[fn].bind(list);
-    }
-    return proxy;
-  };
-
-  Sonic.reverse = function(list) {
-    var fns, proxy;
-    list = Sonic(list);
-    fns = {
-      'get': 'get',
-      'has': 'has',
-      'prev': 'next',
-      'next': 'prev'
     };
-    proxy = Sonic.proxy(list, fns);
-    proxy.onInvalidate = function(callback) {
-      return list.onInvalidate(function(event) {
-        return callback({
-          prev: event.next,
-          next: event.prev
-        });
-      });
-    };
-    return proxy;
-  };
+  })(this);
+  for (key in utilities) {
+    value = utilities[key];
+    _fn(key, value);
+  }
 
-  Sonic.toArray = function(list) {
-    list = Sonic(list);
-    return Sonic.reduce(list, (function(memo, value) {
-      return memo.push(value);
-    }), []);
-  };
+  Sonic.uniqueId = require('./unique_id');
 
-  Sonic.uniqueId = uniqueId;
+  Sonic.factory = require('./factory');
 
-  Sonic.Iterator = Iterator;
+  Sonic.Iterator = require('./iterator');
 
-  Sonic.AbstractList = AbstractList;
+  Sonic.AbstractList = require('./abstract_list');
 
-  Sonic.Unit = Unit;
+  Sonic.List = require('./list');
 
-  Sonic.List = List;
+  Sonic.Unit = require('./unit');
 
-  Sonic.FlatMapList = FlatMapList;
+  Sonic.FlatMapList = require('./flat_map_list');
 
-  Sonic.GroupList = GroupList;
+  Sonic.GroupList = require('./group_list');
 
-  Sonic.TakeList = TakeList;
-
-  fns = ['getIterator', 'each', 'forEach', 'at', 'idAt', 'idOf', 'indexOf', 'contains', 'any', 'some', 'find', 'reduce', 'first', 'last', 'toArray', 'flatMap', 'group', 'sort', 'take', 'map', 'pluck', 'invoke', 'filter', 'concat', 'flatten', 'uniq', 'union', 'intersection', 'proxy', 'reverse'];
-
-  fns.forEach(function(fn) {
-    return AbstractList.prototype[fn] = function() {
-      return Sonic[fn].apply(Sonic, [this].concat(__slice.call(arguments)));
-    };
-  });
+  Sonic.RangeList = require('./range_list');
 
   module.exports = Sonic;
 
@@ -2472,92 +2365,7 @@
 
 //# sourceMappingURL=sonic.js.map
 
-},{"./abstract_list":12,"./factory":13,"./flat_map_list":14,"./group_list":15,"./iterator":16,"./list":17,"./take_list":19,"./unique_id":20,"./unit":21}],19:[function(require,module,exports){
-(function() {
-  var AbstractList, TakeList,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  AbstractList = require("./abstract_list");
-
-  TakeList = (function(_super) {
-    __extends(TakeList, _super);
-
-    function TakeList(source, count) {
-      this._indexById = {
-        0: 0
-      };
-      this._source = source;
-      this._count = count;
-      TakeList.__super__.constructor.call(this);
-      this._source.onInvalidate((function(_this) {
-        return function(event) {
-          return _this._invalidate(event.prev);
-        };
-      })(this));
-      this.onInvalidate((function(_this) {
-        return function(event) {
-          var id, _results;
-          _results = [];
-          while (id = _this._source.next(id || event.prev)) {
-            _results.push(delete _this._indexById[id]);
-          }
-          return _results;
-        };
-      })(this));
-    }
-
-    TakeList.prototype.get = function(id) {
-      return this._source.get(id);
-    };
-
-    TakeList.prototype.has = function(id) {
-      return this._source.has(id);
-    };
-
-    TakeList.prototype.prev = function(id) {
-      if (id == null) {
-        id = 0;
-      }
-    };
-
-    TakeList.prototype.next = function(id) {
-      var i, next, prev;
-      if (id == null) {
-        id = 0;
-      }
-      if ((i = this._indexById[id]) == null) {
-        while (prev = this._source.prev(prev || id)) {
-          if (i = this._indexById[id]) {
-            break;
-          }
-        }
-        while (next = this._source.next(next || prev)) {
-          this._indexById[next] = i++;
-          if (next === id) {
-            break;
-          }
-        }
-      }
-      if (i >= this._count) {
-        return;
-      }
-      next = this._source.next(next || id);
-      this._indexById[next] = ++i;
-      return next;
-    };
-
-    return TakeList;
-
-  })(AbstractList);
-
-  module.exports = TakeList;
-
-}).call(this);
-
-//# sourceMappingURL=take_list.js.map
-
-},{"./abstract_list":12}],20:[function(require,module,exports){
+},{"./abstract_list":12,"./factory":13,"./flat_map_list":14,"./group_list":15,"./iterator":16,"./list":17,"./range_list":18,"./unique_id":20,"./unit":21,"./utilities":22}],20:[function(require,module,exports){
 (function() {
   var counter;
 
@@ -2618,6 +2426,223 @@
 //# sourceMappingURL=unit.js.map
 
 },{"./list":17}],22:[function(require,module,exports){
+(function() {
+  var __slice = [].slice;
+
+  module.exports = {
+    getIterator: function(start) {
+      var Iterator;
+      Iterator = require('./iterator');
+      return new Iterator(this, start);
+    },
+    each: function(fn) {
+      return this.forEach(fn);
+    },
+    forEach: function(fn) {
+      var id;
+      while (id = this.next(id)) {
+        if (fn(this.get(id), id) === false) {
+          return false;
+        }
+      }
+      return true;
+    },
+    findId: function(fn) {
+      var result;
+      result = void 0;
+      this.forEach(function(value, id) {
+        if (fn(value)) {
+          result = id;
+          return false;
+        }
+      });
+      return result;
+    },
+    find: function(fn) {
+      return this.get(this.findId(fn));
+    },
+    idAt: function(index) {
+      var i;
+      i = 0;
+      return this.findId(function() {
+        if (i++ === index) {
+          return true;
+        }
+      });
+    },
+    idOf: function(value) {
+      return this.findId(function(v) {
+        return v === value;
+      });
+    },
+    at: function(index) {
+      return this.get(this.idAt(index));
+    },
+    indexOf: function(value) {
+      var i;
+      i = -1;
+      if (this.some(function(v) {
+        i++;
+        return v === value;
+      })) {
+        return i;
+      }
+      return -1;
+    },
+    some: function(predicate) {
+      return !this.each(function() {
+        return !predicate.apply(null, arguments);
+      });
+    },
+    any: function(predicate) {
+      return this.some(predicate);
+    },
+    contains: function(value) {
+      return this.some(function(v) {
+        return v === value;
+      });
+    },
+    first: function() {
+      return this.get(this.next());
+    },
+    last: function() {
+      return this.get(this.prev());
+    },
+    reduce: function(reduceFn, memo) {
+      this.each(function(value, id) {
+        return reduceFn(memo, value, id);
+      });
+      return memo;
+    },
+    flatMap: function(flatMapFn) {
+      var FlatMapList;
+      FlatMapList = require('./flat_map_list');
+      return new FlatMapList(this, flatMapFn);
+    },
+    group: function(groupFn) {
+      var GroupList;
+      GroupList = require('./group_list');
+      return new GroupList(this, groupFn);
+    },
+    range: function(start, count) {
+      var RangeList;
+      RangeList = require('./range_list');
+      return new RangeList(this, start, count);
+    },
+    take: function(count) {
+      return this.range(0, count);
+    },
+    map: function(mapFn) {
+      var Unit;
+      Unit = require('./unit');
+      return this.flatMap(function(value) {
+        return new Unit(mapFn(value));
+      });
+    },
+    pluck: function(key) {
+      return this.map(function(value) {
+        return value[key];
+      });
+    },
+    invoke: function() {
+      var args, key;
+      key = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      return this.map(function(value) {
+        return value[key].apply(value, args);
+      });
+    },
+    filter: function(filterFn) {
+      var Unit;
+      Unit = require('./unit');
+      return this.flatMap(function(value) {
+        if (filterFn(value)) {
+          return new Unit(value);
+        } else {
+          return new Unit();
+        }
+      });
+    },
+    append: function(lists) {
+      var Unit, factory;
+      factory = require('./factory');
+      Unit = require('./unit');
+      return factory([new Unit(this), factory(lists)]).flatten().flatten();
+    },
+    concat: function() {
+      var lists;
+      lists = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return this.append(lists);
+    },
+    flatten: function() {
+      return this.flatMap(function(list) {
+        return list;
+      });
+    },
+    uniq: function(groupFn) {
+      if (groupFn == null) {
+        groupFn = function(x) {
+          return x;
+        };
+      }
+      return this.flatMap(this.group(groupFn), function(list) {
+        return list.take(1);
+      });
+    },
+    union: function(lists) {
+      return this.concat(lists).uniq();
+    },
+    intersection: function(other) {
+      return this.filter(other.contains);
+    },
+    proxy: function(fns) {
+      var AbstractList, fn, key, proxy;
+      if (fns == null) {
+        fns = {
+          'get': 'get',
+          'has': 'has',
+          'prev': 'prev',
+          'next': 'next',
+          'onInvalidate': 'onInvalidate'
+        };
+      }
+      AbstractList = require('./abstract_list');
+      proxy = new AbstractList;
+      for (key in fns) {
+        fn = fns[key];
+        proxy[key] = this[fn].bind(this);
+      }
+      return proxy;
+    },
+    reverse: function() {
+      var fns, proxy;
+      fns = {
+        'get': 'get',
+        'has': 'has',
+        'prev': 'next',
+        'next': 'prev'
+      };
+      proxy = this.proxy(fns);
+      proxy.onInvalidate = (function(_this) {
+        return function(callback) {
+          return _this.onInvalidate(function(prev, next) {
+            return callback(next, prev);
+          });
+        };
+      })(this);
+      return proxy;
+    },
+    toArray: function() {
+      return this.reduce((function(memo, value) {
+        return memo.push(value);
+      }), []);
+    }
+  };
+
+}).call(this);
+
+//# sourceMappingURL=utilities.js.map
+
+},{"./abstract_list":12,"./factory":13,"./flat_map_list":14,"./group_list":15,"./iterator":16,"./range_list":18,"./unit":21}],23:[function(require,module,exports){
 (function (global){
 (function (exports) {'use strict';
   //shared pointer
