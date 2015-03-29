@@ -32,3 +32,5 @@
   module.exports = RationalFn;
 
 }).call(this);
+
+//# sourceMappingURL=rational_fn.js.map

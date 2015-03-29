@@ -1,22 +1,26 @@
 (function() {
-  var AbstractFn, Constant, factory;
-
-  AbstractFn = require('./abstract_fn');
-
-  Constant = require('./constant');
+  var factory;
 
   factory = function(item) {
-    if (item instanceof AbstractFn) {
+    var AbstractFn, Big, Constant, Vector;
+    Constant = require('./constant');
+    Vector = require('./vector');
+    AbstractFn = require('./abstract_fn');
+    Big = require('big.js');
+    if (item instanceof Constant || item instanceof Vector || item instanceof AbstractFn) {
       return item;
     }
-    switch (typeof item) {
-      case "number":
-        return new Constant(item);
-      case "function":
-        return new AbstractFn(item);
+    if (typeof item === "number" || item instanceof Big) {
+      return new Constant(item);
+    } else if (item instanceof Array) {
+      return new Vector(item);
+    } else if (typeof item === "function") {
+      return new AbstractFn(item);
     }
   };
 
   module.exports = factory;
 
 }).call(this);
+
+//# sourceMappingURL=factory.js.map

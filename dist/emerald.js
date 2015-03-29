@@ -1,5 +1,5 @@
 (function() {
-  var AbstractFn, Big, Constant, DifferenceFn, Emerald, PowerFn, ProductFn, RationalFn, Sonic, SumFn, factory, fns, utilities,
+  var AbstractFn, Big, Constant, DifferenceFn, Emerald, PowerFn, ProductFn, RationalFn, Sonic, SumFn, Vector, factory, fns, key, utilities, value, _fn,
     __slice = [].slice;
 
   Sonic = require('sonic');
@@ -9,6 +9,8 @@
   factory = require('./factory');
 
   utilities = require('./utilities');
+
+  Vector = require('./vector');
 
   AbstractFn = require('./abstract_fn');
 
@@ -34,6 +36,8 @@
 
   Emerald.Big = Big;
 
+  Emerald.Vector = Vector;
+
   Emerald.AbstractFn = AbstractFn;
 
   Emerald.Constant = Constant;
@@ -51,16 +55,29 @@
   fns = ["abs", "cmp", "div", "eq", "gt", "gte", "lt", "lte", "minus", "sub", "mod", "plus", "add", "pow", "round", "sqrt", "times", "mul", "toExponential", "toFixed", "toPrecision"];
 
   fns.forEach(function(key) {
-    return Emerald.Sonic.AbstractList.prototype[key] = function() {
-      var args;
-      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return this.map(function(value) {
-        var _ref;
-        return (_ref = Big(value))[key].apply(_ref, args);
-      });
+    return Emerald[key] = function() {
+      var args, value, _ref;
+      value = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      return (_ref = Emerald.factory(value))[key].apply(_ref, args);
     };
   });
+
+  _fn = (function(_this) {
+    return function(key, value) {
+      return Emerald[key] = function() {
+        var args, obj;
+        obj = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+        return value.apply(Emerald.factory(obj), args);
+      };
+    };
+  })(this);
+  for (key in utilities) {
+    value = utilities[key];
+    _fn(key, value);
+  }
 
   module.exports = Emerald;
 
 }).call(this);
+
+//# sourceMappingURL=emerald.js.map

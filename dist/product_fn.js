@@ -32,3 +32,5 @@
   module.exports = ProductFn;
 
 }).call(this);
+
+//# sourceMappingURL=product_fn.js.map

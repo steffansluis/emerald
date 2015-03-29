@@ -32,3 +32,5 @@
   module.exports = SumFn;
 
 }).call(this);
+
+//# sourceMappingURL=sum_fn.js.map

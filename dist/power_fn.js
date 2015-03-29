@@ -47,3 +47,5 @@
   module.exports = PowerFn;
 
 }).call(this);
+
+//# sourceMappingURL=power_fn.js.map

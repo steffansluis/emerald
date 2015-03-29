@@ -1,9 +1,9 @@
 (function() {
-  var AbstractFn, Unit, utilities,
+  var AbstractFn, List, utilities,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Unit = require('sonic/dist/unit');
+  List = require('sonic/dist/list');
 
   utilities = require('./utilities');
 
@@ -38,8 +38,10 @@
 
     return AbstractFn;
 
-  })(Unit);
+  })(List);
 
   module.exports = AbstractFn;
 
 }).call(this);
+
+//# sourceMappingURL=abstract_fn.js.map

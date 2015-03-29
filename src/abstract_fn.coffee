@@ -1,8 +1,8 @@
-Unit      = require('sonic/dist/unit')
+List      = require('sonic/dist/list')
 
 utilities = require('./utilities')
 
-class AbstractFn extends Unit
+class AbstractFn extends List
 
   constructor: (options = {}) ->
     if typeof options is "function"

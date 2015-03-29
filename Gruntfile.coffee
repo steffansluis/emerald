@@ -5,6 +5,8 @@ module.exports = ( grunt ) ->
     'factory'
     'utilities'
 
+    'vector'
+
     'abstract_fn'
     'constant'
     'sum_fn'
@@ -44,8 +46,8 @@ module.exports = ( grunt ) ->
 
     coffee:
       default:
-        # options:
-          # sourceMap: true
+        options:
+          sourceMap: true
         files: [
           expand: true
           cwd: 'src'
@@ -69,7 +71,7 @@ module.exports = ( grunt ) ->
       default:
         files: 'dist/emerald.browser.js': 'dist/emerald.js'
         options:
-          sourceMap: false
+          sourceMap: true
           browserifyOptions:
             standalone: 'Emerald'
 

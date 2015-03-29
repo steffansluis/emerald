@@ -1,10 +1,10 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Emerald = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function() {
-  var AbstractFn, Unit, utilities,
+  var AbstractFn, List, utilities,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Unit = require('sonic/dist/unit');
+  List = require('sonic/dist/list');
 
   utilities = require('./utilities');
 
@@ -39,45 +39,90 @@
 
     return AbstractFn;
 
-  })(Unit);
+  })(List);
 
   module.exports = AbstractFn;
 
 }).call(this);
 
-},{"./utilities":10,"sonic/dist/unit":21}],2:[function(require,module,exports){
-(function() {
-  var AbstractFn, Constant,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+//# sourceMappingURL=abstract_fn.js.map
 
-  AbstractFn = require('./abstract_fn');
+},{"./utilities":10,"sonic/dist/list":18}],2:[function(require,module,exports){
+(function() {
+  var Big, Constant, Unit, fns,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __slice = [].slice;
+
+  Unit = require('sonic/dist/unit');
+
+  Big = require('big.js');
 
   Constant = (function(_super) {
     __extends(Constant, _super);
 
-    function Constant(options) {
-      if (options == null) {
-        options = {};
+    function Constant(value) {
+      if (value instanceof Big) {
+        this._value = value;
+      } else {
+        this._value = Big(value);
       }
-      Constant.__super__.constructor.call(this, options);
+      Constant.__super__.constructor.call(this, this);
     }
 
-    Constant.prototype.integrate = function() {};
+    Constant.prototype.push = function(value) {
+      this._value = Big(value);
+      return Constant.__super__.push.call(this, this);
+    };
+
+    Constant.prototype.toExponential = function() {
+      return this._value.toExponential();
+    };
+
+    Constant.prototype.toFixed = function() {
+      return this._value.toFixed();
+    };
+
+    Constant.prototype.toPrecision = function() {
+      return this._value.toPrecision();
+    };
+
+    Constant.prototype.toString = function() {
+      return this._value.toString();
+    };
 
     Constant.prototype.evaluate = function() {
-      return this.inner;
+      return this._value;
     };
 
     return Constant;
 
-  })(AbstractFn);
+  })(Unit);
+
+  fns = ["abs", "cmp", "div", "eq", "gt", "gte", "lt", "lte", "minus", "sub", "mod", "plus", "add", "pow", "round", "sqrt", "times", "mul"];
+
+  fns.forEach(function(key) {
+    var factory;
+    factory = require('./factory');
+    return Constant.prototype[key] = function() {
+      var args, res, _ref;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      res = (_ref = this._value)[key].apply(_ref, args);
+      if (res instanceof Big) {
+        return factory(res);
+      } else {
+        return res;
+      }
+    };
+  });
 
   module.exports = Constant;
 
 }).call(this);
 
-},{"./abstract_fn":1}],3:[function(require,module,exports){
+//# sourceMappingURL=constant.js.map
+
+},{"./factory":5,"big.js":12,"sonic/dist/unit":22}],3:[function(require,module,exports){
 (function() {
   var AbstractFn, DifferenceFn,
     __hasProp = {}.hasOwnProperty,
@@ -113,9 +158,11 @@
 
 }).call(this);
 
+//# sourceMappingURL=difference_fn.js.map
+
 },{"./abstract_fn":1}],4:[function(require,module,exports){
 (function() {
-  var AbstractFn, Big, Constant, DifferenceFn, Emerald, PowerFn, ProductFn, RationalFn, Sonic, SumFn, factory, fns, utilities,
+  var AbstractFn, Big, Constant, DifferenceFn, Emerald, PowerFn, ProductFn, RationalFn, Sonic, SumFn, Vector, factory, fns, key, utilities, value, _fn,
     __slice = [].slice;
 
   Sonic = require('sonic');
@@ -125,6 +172,8 @@
   factory = require('./factory');
 
   utilities = require('./utilities');
+
+  Vector = require('./vector');
 
   AbstractFn = require('./abstract_fn');
 
@@ -150,6 +199,8 @@
 
   Emerald.Big = Big;
 
+  Emerald.Vector = Vector;
+
   Emerald.AbstractFn = AbstractFn;
 
   Emerald.Constant = Constant;
@@ -167,37 +218,52 @@
   fns = ["abs", "cmp", "div", "eq", "gt", "gte", "lt", "lte", "minus", "sub", "mod", "plus", "add", "pow", "round", "sqrt", "times", "mul", "toExponential", "toFixed", "toPrecision"];
 
   fns.forEach(function(key) {
-    return Emerald.Sonic.AbstractList.prototype[key] = function() {
-      var args;
-      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return this.map(function(value) {
-        var _ref;
-        return (_ref = Big(value))[key].apply(_ref, args);
-      });
+    return Emerald[key] = function() {
+      var args, value, _ref;
+      value = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      return (_ref = Emerald.factory(value))[key].apply(_ref, args);
     };
   });
+
+  _fn = (function(_this) {
+    return function(key, value) {
+      return Emerald[key] = function() {
+        var args, obj;
+        obj = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+        return value.apply(Emerald.factory(obj), args);
+      };
+    };
+  })(this);
+  for (key in utilities) {
+    value = utilities[key];
+    _fn(key, value);
+  }
 
   module.exports = Emerald;
 
 }).call(this);
 
-},{"./abstract_fn":1,"./constant":2,"./difference_fn":3,"./factory":5,"./power_fn":6,"./product_fn":7,"./rational_fn":8,"./sum_fn":9,"./utilities":10,"big.js":11,"sonic":19}],5:[function(require,module,exports){
+//# sourceMappingURL=emerald.js.map
+
+},{"./abstract_fn":1,"./constant":2,"./difference_fn":3,"./factory":5,"./power_fn":6,"./product_fn":7,"./rational_fn":8,"./sum_fn":9,"./utilities":10,"./vector":11,"big.js":12,"sonic":20}],5:[function(require,module,exports){
 (function() {
-  var AbstractFn, Constant, factory;
-
-  AbstractFn = require('./abstract_fn');
-
-  Constant = require('./constant');
+  var factory;
 
   factory = function(item) {
-    if (item instanceof AbstractFn) {
+    var AbstractFn, Big, Constant, Vector;
+    Constant = require('./constant');
+    Vector = require('./vector');
+    AbstractFn = require('./abstract_fn');
+    Big = require('big.js');
+    if (item instanceof Constant || item instanceof Vector || item instanceof AbstractFn) {
       return item;
     }
-    switch (typeof item) {
-      case "number":
-        return new Constant(item);
-      case "function":
-        return new AbstractFn(item);
+    if (typeof item === "number" || item instanceof Big) {
+      return new Constant(item);
+    } else if (item instanceof Array) {
+      return new Vector(item);
+    } else if (typeof item === "function") {
+      return new AbstractFn(item);
     }
   };
 
@@ -205,7 +271,9 @@
 
 }).call(this);
 
-},{"./abstract_fn":1,"./constant":2}],6:[function(require,module,exports){
+//# sourceMappingURL=factory.js.map
+
+},{"./abstract_fn":1,"./constant":2,"./vector":11,"big.js":12}],6:[function(require,module,exports){
 (function() {
   var AbstractFn, PowerFn,
     __hasProp = {}.hasOwnProperty,
@@ -256,6 +324,8 @@
 
 }).call(this);
 
+//# sourceMappingURL=power_fn.js.map
+
 },{"./abstract_fn":1}],7:[function(require,module,exports){
 (function() {
   var AbstractFn, ProductFn,
@@ -291,6 +361,8 @@
   module.exports = ProductFn;
 
 }).call(this);
+
+//# sourceMappingURL=product_fn.js.map
 
 },{"./abstract_fn":1}],8:[function(require,module,exports){
 (function() {
@@ -328,6 +400,8 @@
 
 }).call(this);
 
+//# sourceMappingURL=rational_fn.js.map
+
 },{"./abstract_fn":1}],9:[function(require,module,exports){
 (function() {
   var AbstractFn, SumFn,
@@ -364,89 +438,61 @@
 
 }).call(this);
 
+//# sourceMappingURL=sum_fn.js.map
+
 },{"./abstract_fn":1}],10:[function(require,module,exports){
 (function() {
   var utilities;
 
-  utilities = {
-    power: function(exp) {
-      var PowerFn, factory, options;
-      factory = require('./factory');
-      PowerFn = require('./power_fn');
-      options = {
-        exp: factory(exp),
-        fn: this
-      };
-      return new PowerFn(options);
-    },
-    square: function() {
-      return this.power(2);
-    },
-    cube: function() {
-      return this.power(3);
-    },
-    sqrt: function() {
-      return this.power(0.5);
-    },
-    nroot: function(n) {
-      return this.power(factory(1).over(n));
-    },
-    product: function(right) {
-      var ProductFn, factory;
-      factory = require('./factory');
-      ProductFn = require('./product_fn');
-      return new ProductFn({
-        left: this,
-        right: factory(right)
-      });
-    },
-    times: function(right) {
-      return this.product(right);
-    },
-    divide: function(right) {
-      var RationalFn, factory;
-      factory = require('./factory');
-      RationalFn = require('./rational_fn');
-      return new RationalFn({
-        left: this,
-        right: factory(right)
-      });
-    },
-    over: function(right) {
-      return this.divide(right);
-    },
-    faculty: function() {
-      if (this.inner.evaluate().eq(factory(0).evaluate())) {
-        return 1;
-      } else {
-        return this.product(this.minus(1).faculty());
-      }
-    },
-    sum: function(right) {
-      var SumFn, factory;
-      factory = require('./factory');
-      SumFn = require('./sum_fn');
-      return new SumFn({
-        left: this,
-        right: factory(right)
-      });
-    },
-    minus: function(right) {
-      var DifferenceFn, factory;
-      factory = require('./factory');
-      DifferenceFn = require('./difference_fn');
-      return new DifferenceFn({
-        left: this,
-        right: factory(right)
-      });
-    }
-  };
+  utilities = {};
 
   module.exports = utilities;
 
 }).call(this);
 
-},{"./difference_fn":3,"./factory":5,"./power_fn":6,"./product_fn":7,"./rational_fn":8,"./sum_fn":9}],11:[function(require,module,exports){
+//# sourceMappingURL=utilities.js.map
+
+},{}],11:[function(require,module,exports){
+(function() {
+  var AbstractList, FlatMapList, Vector, fns,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __slice = [].slice;
+
+  FlatMapList = require('sonic/dist/flat_map_list');
+
+  AbstractList = require('sonic/dist/abstract_list');
+
+  Vector = (function(_super) {
+    __extends(Vector, _super);
+
+    function Vector(values) {
+      var factory;
+      factory = require('./factory');
+      Vector.__super__.constructor.call(this, values, factory);
+    }
+
+    return Vector;
+
+  })(FlatMapList);
+
+  fns = ["abs", "cmp", "div", "eq", "gt", "gte", "lt", "lte", "minus", "sub", "mod", "plus", "add", "pow", "round", "sqrt", "times", "mul", "toExponential", "toFixed", "toPrecision"];
+
+  fns.forEach(function(key) {
+    return AbstractList.prototype[key] = function() {
+      var args;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return this.invoke.apply(this, [key].concat(__slice.call(args)));
+    };
+  });
+
+  module.exports = Vector;
+
+}).call(this);
+
+//# sourceMappingURL=vector.js.map
+
+},{"./factory":5,"sonic/dist/abstract_list":13,"sonic/dist/flat_map_list":15}],12:[function(require,module,exports){
 /* big.js v3.0.1 https://github.com/MikeMcl/big.js/LICENCE */
 ;(function (global) {
     'use strict';
@@ -1586,7 +1632,7 @@
     }
 })(this);
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function() {
   var AbstractList, key, uniqueId, utilities, value;
 
@@ -1756,7 +1802,7 @@
 
 //# sourceMappingURL=abstract_list.js.map
 
-},{"./unique_id":20,"./utilities":22}],13:[function(require,module,exports){
+},{"./unique_id":21,"./utilities":23}],14:[function(require,module,exports){
 (function() {
   var AbstractList, List, Unit;
 
@@ -1782,7 +1828,7 @@
 
 //# sourceMappingURL=factory.js.map
 
-},{"./abstract_list":12,"./list":17,"./unit":21}],14:[function(require,module,exports){
+},{"./abstract_list":13,"./list":18,"./unit":22}],15:[function(require,module,exports){
 (function() {
   var AbstractList, FlatMapList, Unit, factory,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -1969,7 +2015,7 @@
 
 //# sourceMappingURL=flat_map_list.js.map
 
-},{"./abstract_list":12,"./factory":13,"./unit":21}],15:[function(require,module,exports){
+},{"./abstract_list":13,"./factory":14,"./unit":22}],16:[function(require,module,exports){
 (function() {
   var FlatMapList, GroupList, Unit,
     __hasProp = {}.hasOwnProperty,
@@ -2017,7 +2063,7 @@
 
 //# sourceMappingURL=group_list.js.map
 
-},{"./flat_map_list":14,"./unit":21,"es6-collections":23}],16:[function(require,module,exports){
+},{"./flat_map_list":15,"./unit":22,"es6-collections":24}],17:[function(require,module,exports){
 (function() {
   var Iterator;
 
@@ -2086,7 +2132,7 @@
 
 //# sourceMappingURL=iterator.js.map
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function() {
   var AbstractList, List,
     __hasProp = {}.hasOwnProperty,
@@ -2159,7 +2205,7 @@
 
 //# sourceMappingURL=list.js.map
 
-},{"./abstract_list":12}],18:[function(require,module,exports){
+},{"./abstract_list":13}],19:[function(require,module,exports){
 (function() {
   var AbstractList, RangeList, factory,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -2304,7 +2350,7 @@
 
 //# sourceMappingURL=range_list.js.map
 
-},{"./abstract_list":12,"./factory":13}],19:[function(require,module,exports){
+},{"./abstract_list":13,"./factory":14}],20:[function(require,module,exports){
 (function() {
   var Sonic, key, utilities, value, _fn,
     __slice = [].slice;
@@ -2365,7 +2411,7 @@
 
 //# sourceMappingURL=sonic.js.map
 
-},{"./abstract_list":12,"./factory":13,"./flat_map_list":14,"./group_list":15,"./iterator":16,"./list":17,"./range_list":18,"./unique_id":20,"./unit":21,"./utilities":22}],20:[function(require,module,exports){
+},{"./abstract_list":13,"./factory":14,"./flat_map_list":15,"./group_list":16,"./iterator":17,"./list":18,"./range_list":19,"./unique_id":21,"./unit":22,"./utilities":23}],21:[function(require,module,exports){
 (function() {
   var counter;
 
@@ -2379,7 +2425,7 @@
 
 //# sourceMappingURL=unique_id.js.map
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 (function() {
   var List, Unit,
     __hasProp = {}.hasOwnProperty,
@@ -2425,7 +2471,7 @@
 
 //# sourceMappingURL=unit.js.map
 
-},{"./list":17}],22:[function(require,module,exports){
+},{"./list":18}],23:[function(require,module,exports){
 (function() {
   var __slice = [].slice;
 
@@ -2642,7 +2688,7 @@
 
 //# sourceMappingURL=utilities.js.map
 
-},{"./abstract_list":12,"./factory":13,"./flat_map_list":14,"./group_list":15,"./iterator":16,"./range_list":18,"./unit":21}],23:[function(require,module,exports){
+},{"./abstract_list":13,"./factory":14,"./flat_map_list":15,"./group_list":16,"./iterator":17,"./range_list":19,"./unit":22}],24:[function(require,module,exports){
 (function (global){
 (function (exports) {'use strict';
   //shared pointer
