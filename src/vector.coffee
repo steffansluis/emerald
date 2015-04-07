@@ -9,6 +9,10 @@ class Vector extends FlatMapList
     factory   = require('./factory')
     super values, factory
 
+  push: ( ) -> @_source.push(arguments...)
+  pop: ( ) -> @_source.pop()
+  shift: ( ) -> @_source.shift(arguments...)
+
   # toString: () ->
   #   "#{@inner?.toString()}"
 

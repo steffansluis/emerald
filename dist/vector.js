@@ -17,6 +17,20 @@
       Vector.__super__.constructor.call(this, values, factory);
     }
 
+    Vector.prototype.push = function() {
+      var _ref;
+      return (_ref = this._source).push.apply(_ref, arguments);
+    };
+
+    Vector.prototype.pop = function() {
+      return this._source.pop();
+    };
+
+    Vector.prototype.shift = function() {
+      var _ref;
+      return (_ref = this._source).shift.apply(_ref, arguments);
+    };
+
     return Vector;
 
   })(FlatMapList);
